@@ -1,0 +1,34 @@
+.registerAuto{
+    display: flex;
+    flex-direction: column;
+height: 100%;
+justify-content: space-evenly;
+}
+.options{
+    display: flex;
+    justify-content: space-around;
+}
+.option{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.studyIcon{
+    border-radius: 50%;
+    padding: 15px;
+    cursor: pointer;
+    font-size: 2rem;
+    background: lightgray;
+    color: white;
+}
+.choosen{
+    background: #5f30e2 !important;
+}
+.searchInputCont{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+
+}

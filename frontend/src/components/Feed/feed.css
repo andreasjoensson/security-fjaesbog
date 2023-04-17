@@ -1,0 +1,146 @@
+.feed{
+    flex: 3;
+    background: #F2F8FD;
+}
+
+.topbar{
+    display: flex;
+    background: white;
+    position: relative;
+    align-items: center;
+    height: 100px;
+}
+
+.topbar > nav{
+    flex: 3;
+    height:100%
+}
+.topbarUl{
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    margin: 0px;
+    padding-left: 0px;
+    margin-left: 15px;
+}
+.feed-input{
+    border-radius: 6px;
+    border: 1px solid gainsboro;
+    width: 200px;
+    padding: 15px;
+    text-align: center;
+    font-size: 0.8rem;
+}
+.topbarUl > li{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+   justify-content: center;
+   position: relative;
+   margin: 0px;
+   cursor: pointer;
+   width: 100px;
+   align-items: center;
+}
+
+.active-line-vert{
+    height: 2px;
+    width: 100%;
+    background:#0F8AF9;
+    position: absolute;
+    bottom: 0;
+}
+.input-container{
+    position: relative;
+    flex: 2;
+}
+
+.currentUser{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 175px;
+    position: absolute;
+    right: 10px;
+    top: 15px;
+}
+
+.userImage >img{
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.userInformation{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    margin-left: 10px;
+}
+.expandUser{
+position: absolute;
+top: 25px;
+right: 0;
+}
+.userInformation > h4{
+    margin: 0px;
+}
+.searchIcon{
+    position: absolute;
+    left: 8px;
+    bottom: 10px;
+}
+.postContainer{
+    padding: 15px;
+}
+.createPost{
+    background: white;
+    padding: 15px;
+    border-radius: 12px;
+}
+.createPost > h3{
+    margin: 0px;
+}
+.inputProfilePic{
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+.postInput{
+    border: none;
+    width: 100%;
+    padding: 7px;
+    font-size: 0.8rem;
+    outline: none;
+}
+.createPostInput{
+    position: relative;
+    display: flex;
+}
+.logout{
+    cursor: pointer;
+}
+
+.line{
+    width: 100%;
+    height: 1px;
+    background: lightgray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.like{
+    cursor: pointer;
+}
+
+.dislike{
+    cursor: pointer;
+}
+.currentUserContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

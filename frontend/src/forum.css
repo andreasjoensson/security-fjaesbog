@@ -1,0 +1,75 @@
+.communityContainer{
+    flex: 3;
+}
+.communityCoverImg{
+    width: 100%;
+    object-fit: cover;
+    height: 175px;
+}
+.communityProfilePic{
+    position: relative;
+    width: 95px;
+}
+.communityProfilePicImg{
+    object-fit: cover;
+    height: 82px;
+    position: absolute;
+    top: -35px;
+    width: 82px;
+    border-radius: 50%;
+}
+.communityBar{
+    display: flex;
+    background: white;
+    flex-direction: column;
+}
+
+.communityPostContainer{
+    background: #F2F8FD;
+    padding: 10px;
+}
+.communityDescription{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+.communityJoin{
+    display: flex;
+    align-items: center;
+}
+.communityToJoin > h2{
+    margin: 0px;
+}
+.joinCommunity{
+    border: none;
+    padding: 8px;
+    border-radius: 12px;
+    background: #0F8AF9;
+    cursor: pointer;
+    margin-left: 10px;
+    height: 35px;
+    width: 70px;
+    color: white;
+    font-size: 1rem;
+}
+.noaccess{
+    text-align: center;
+    color: gray;
+}
+.communityInfo{
+    margin-left: 10%;
+    position: relative;
+    display: flex;
+    margin-right: 10%;
+}
+.communityMembers{
+    position: absolute;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    top: 20px;
+}
+.leave{
+    background: red !important;
+}

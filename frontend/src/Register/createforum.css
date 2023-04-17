@@ -1,0 +1,45 @@
+.createForum{
+    flex: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.labelTitle{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.createForumBtn{
+    width: 125px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    padding: 12px;
+    margin-left: auto;
+    background: #0F8AF9;
+    color: white;
+
+}
+.image-upload{
+    position: relative;
+}
+
+.forum-form > input{
+    font-size: 1.2rem;
+    border: 1px solid lightgray;
+    padding: 5px;
+    border-radius: 5px;
+}
+.forum-form{
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    justify-content: space-evenly;
+    height: 500px;
+    padding: 15px;
+    border-radius: 16px;
+}
+.profilePicturePic{
+    position: absolute;
+    bottom: -20px;
+    left: 25px;
+}

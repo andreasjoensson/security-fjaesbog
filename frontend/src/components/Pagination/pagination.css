@@ -1,0 +1,13 @@
+.pageNumbers{
+    display: flex;
+    justify-content: space-evenly;
+    list-style-type: none;
+}
+.pageNumbers > li{
+    cursor: pointer;
+}
+.paginationBtn{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}

@@ -1,0 +1,33 @@
+.searchContainer{
+    flex: 3;
+}
+.searchPic{
+    width: 82px;
+    height: 82px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.searchItem{
+    display: flex;
+    flex-direction: column;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+.searchInput{
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 1rem;
+    width: 250px;
+    border: none;
+    outline: none;
+    border:1px solid lightgray;
+}
+.search-items{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 10px;
+    padding: 10px;
+    margin-top: 50px;
+}

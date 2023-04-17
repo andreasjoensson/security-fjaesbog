@@ -1,0 +1,17 @@
+.input-post{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.text-input{
+    position: relative;
+    display: flex;
+}
+.sendIcon, .imageIcon{
+    position: absolute !important;
+    right: 0;
+    cursor: pointer;
+}
+.sendIcon{
+    right: 30px;
+}

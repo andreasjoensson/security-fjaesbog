@@ -1,0 +1,39 @@
+.userPicComment{
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+.comment{
+    display: flex;
+
+}
+.postComment{
+    margin-bottom: 15px;
+}
+.commentContainer{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: relative;
+}
+.commentBubble{
+    padding: 7px;
+}
+.commentBottom{
+    position: relative;
+    display: flex;
+    padding-bottom: 10px;
+}
+.commentLikes{
+    margin:0px;
+    margin-left: 5px;
+}
+.reactions{
+    display: flex;
+}
+.profilePicComment{
+    display: flex;
+    justify-content: center;
+    margin-right: 15px;
+}
