@@ -89,7 +89,9 @@ module.exports = {
           new Date().toISOString().slice(0, 19).replace("T", " "),
         ]
       );
+      console.log("res", res.rows[0]);
       const token = createToken(res.rows[0]);
+      console.log("token", token);
       return {
         ...res.rows[0],
         token,
