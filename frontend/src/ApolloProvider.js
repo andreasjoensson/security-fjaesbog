@@ -1,27 +1,26 @@
-import App from './App';
-import React from 'react';
+import App from "./App";
+import React from "react";
 
 import {
-    ApolloClient,
-    InMemoryCache,
-    ApolloProvider,
-    createHttpLink
-  } from "@apollo/client";
-  import { setContext } from "@apollo/client/link/context";
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 
-  const httpLink = createHttpLink({
-    uri: 'https://danskerbook.dk/'
-  });
+const httpLink = createHttpLink({
+  uri: "http://localhost:4000",
+});
 
 const authLink = setContext(() => {
   const token = localStorage.getItem("jwtToken");
   return {
     headers: {
-      Authorization: token ? `Bearer ${token}` : ''
-    }
+      Authorization: token ? `Bearer ${token}` : "",
+    },
   };
 });
-
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),

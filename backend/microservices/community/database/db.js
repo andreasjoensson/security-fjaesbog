@@ -4,7 +4,7 @@ var path = require("path");
 
 const pool = new Pool({
   user: "uwjzyhwc",
-  password: "//",
+  password: "Lkymyym3z91Ko0AECQfYgPonwInTFvv5",
   host: "abul.db.elephantsql.com",
   port: 5432,
   database: "uwjzyhwc",
