@@ -1,74 +1,75 @@
-.post{
-    padding: 13px;
-    display: flex;
-    flex-direction: column;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 2px 2px 13px 2px rgba(0,0,0,0.10);
-    margin-top: 10px;
+.post {
+  padding: 13px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 2px 2px 13px 2px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
 }
-.postPicture{
-    width: 100%;
-    height: 200px;
-    object-fit:cover;
+.postPicture {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
 }
-.postProfilePic{
-    width: 42px;
-    height: 42px;
-    object-fit: cover;
-    border-radius: 50%;
+.postProfilePic {
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
+  border-radius: 50%;
 }
-.postUser{
-    display: flex;
-    position: relative;
-}
-
-h3{
-margin: 0px;
-}
-.postUserInformation{
-    margin-left: 15px;
-}
-.postUserInformation > span{
-    color:#64646e;
-    font-size: 0.9rem;
-}
-.postBottom{
-    display: flex;
-    color: #64646e;
-    justify-content: space-evenly;
-}
-.postLikes,.postComments{
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-    width: 150px;
-}
-.postComment{
-    display: flex;
-    position: relative;
-}
-.postComment > input{
-    border: none;
-    margin-left: 10px;
-    border-radius: 12px;
-    padding: 15px;
-    outline: none;
-    width: 100%;
-    background: #fafafb;
-    font-size: 0.9rem;
-}
-.sendComment{
-    cursor: pointer;
-    position: absolute;
-    right: 5px;
-    top: 10px;
+.postUser {
+  display: flex;
+  position: relative;
 }
 
-.postContainer{
-    height: 609px;
-    overflow-y: scroll;
-    scrollbar-base-color:blue;
-    scrollbar-width: thin;
-    scrollbar-color: #0F8AF9 lightgrey;
+h3 {
+  margin: 0px;
+}
+.postUserInformation {
+  margin-left: 15px;
+}
+.postUserInformation > span {
+  color: #64646e;
+  font-size: 0.9rem;
+}
+.postBottom {
+  display: flex;
+  color: #64646e;
+  justify-content: space-evenly;
+}
+.postLikes,
+.postComments {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 150px;
+}
+.postComment {
+  display: flex;
+  position: relative;
+}
+.postComment > input {
+  border: none;
+  margin-left: 10px;
+  border-radius: 12px;
+  padding: 15px;
+  outline: none;
+  width: 100%;
+  background: #fafafb;
+  font-size: 0.9rem;
+}
+.sendComment {
+  cursor: pointer;
+  position: absolute;
+  right: 5px;
+  top: 10px;
+}
+
+.postContainer {
+  height: calc(100vh - 100px);
+  overflow-y: scroll;
+  scrollbar-base-color: blue;
+  scrollbar-width: thin;
+  scrollbar-color: #0f8af9 lightgrey;
 }

@@ -7,6 +7,10 @@ const { buildFederatedSchema } = require("@apollo/federation");
 (async () => {
   const server = new ApolloServer({
     schema: buildFederatedSchema([{ typeDefs, resolvers }]),
+    context: ({ req }) => {
+      const user = req.headers.authorization; // Extract the user from the authorization header
+      return { user }; // Return the user as part of the context
+    },
   });
 
   await server.start(); // Add this line to start the server
