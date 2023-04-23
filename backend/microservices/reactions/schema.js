@@ -16,28 +16,28 @@ const typeDefs = gql`
     deleteComment(comment_id: ID!): Comment!
   }
 
-  type Like {
+  type Like @key(fields: "id") {
     id: ID!
     user_id: ID!
     created_at: String!
   }
-  type Dislike {
+  type Dislike @key(fields: "id") {
     id: ID!
     user_id: ID!
     created_at: String!
   }
-  type CommentDislike {
+  type CommentDislike @key(fields: "id") {
     id: ID!
     user_id: ID!
     created_at: String!
   }
-  type CommentLike {
+  type CommentLike @key(fields: "id") {
     id: ID!
     user_id: ID!
     created_at: String!
   }
 
-  type Comment {
+  type Comment @key(fields: "id") {
     id: ID!
     created_at: String
     user_id: ID!

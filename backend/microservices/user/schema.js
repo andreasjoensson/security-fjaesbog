@@ -32,7 +32,7 @@ const typeDefs = gql`
     Logo: String!
   }
 
-  type User {
+  type User @key(fields: "user_id") {
     user_id: ID!
     name: String!
     password: String!
@@ -46,12 +46,12 @@ const typeDefs = gql`
     last_login: String
   }
 
-  type Member {
+  type Member @key(fields: "users_id") {
     community_id: ID!
     users_id: ID!
   }
 
-  type Community {
+  type Community @key(fields: "id") {
     id: ID!
     name: String!
     description: String!

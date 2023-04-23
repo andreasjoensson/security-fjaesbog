@@ -14,7 +14,7 @@ const typeDefs = gql`
     ): Community
   }
 
-  type Community {
+  type Community @key(fields: "id") {
     id: ID!
     name: String!
     description: String!

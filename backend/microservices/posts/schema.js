@@ -17,7 +17,7 @@ const typeDefs = gql`
     deletePost(post_id: ID!): Post
   }
 
-  type Post {
+  type Post @key(fields: "post_id") {
     post_id: ID!
     user_id: ID!
     title: String!
@@ -31,18 +31,18 @@ const typeDefs = gql`
     likes: [Like]
   }
 
-  type Like {
+  type Like @key(fields: "id") {
     id: ID!
     user_id: ID!
     created_at: String!
   }
-  type Dislike {
+  type Dislike @key(fields: "id") {
     id: ID!
     user_id: ID!
     created_at: String!
   }
 
-  type Comment {
+  type Comment @key(fields: "id") {
     id: ID!
     created_at: String
     user_id: ID!
