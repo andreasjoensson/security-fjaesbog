@@ -61,7 +61,7 @@ export default function Login() {
         <div className="loginContainer">
           <div className="loginText">
             <h1>Log ind på din konto</h1>
-            <p>Log ind for at få adgang til en commmunity</p>
+            <p>Log ind for at få adgang til en commmunity af studerende!</p>
           </div>
 
           <form className="loginForm" onSubmit={submitLogin}>
@@ -85,10 +85,10 @@ export default function Login() {
               <Lock className="icon" />
             </div>
 
-            <div className="bottomLogin">
-              <div className="checkbox">
+            <div className="bottomLogin mb-3">
+              <div className="checkbox align-items-center">
                 <input type="checkbox" name="vehicle1" value="Bike" />
-                <label>Log mig ikke ud.</label>
+                <label className="ms-3">Log mig ikke ud.</label>
               </div>
 
               <a className="forgotPassword">Glemt password?</a>

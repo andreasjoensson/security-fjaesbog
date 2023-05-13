@@ -40,7 +40,12 @@ export default function Profile() {
     variables: { name: id },
   });
 
-  if (loading) return "loading...";
+  if (loading)
+    return (
+      <div class="lds-circle">
+        <div></div>
+      </div>
+    );
 
   return (
     <div className="profilePage">

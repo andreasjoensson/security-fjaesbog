@@ -17,6 +17,17 @@ module.exports = {
         members: getAmountOfMembers.rows[0].count,
       };
     },
+    async getCommunitiesByUser(_, {}, context) {
+      const user = checkAuth(context);
+      const getCommunityQuery = await db.query(
+        "SELECT * FROM community WHERE creator_id = $1",
+        [user.user_id]
+      );
+
+      return {
+        communities: getCommunityQuery.rows,
+      };
+    },
   },
   Mutation: {
     async createCommunity(

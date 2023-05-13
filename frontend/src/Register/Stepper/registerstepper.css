@@ -1,0 +1,47 @@
+.progressLogo {
+  border-radius: 50%;
+  background: #6d9886;
+  color: white;
+  padding: 10px;
+}
+.progressItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 65px;
+}
+.progressList {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.register {
+  height: 100vh;
+}
+.progressIcon {
+  margin-left: 15px;
+}
+
+.progressList {
+  padding-left: 0px;
+}
+
+.progressContainer {
+  flex: 1;
+}
+.progressText > p {
+  text-align: right;
+  color: white;
+  font-weight: bold;
+}
+.progressText {
+  width: 100px;
+  text-align: right;
+}
+.progressText > span {
+  color: white;
+  text-align: right;
+}
+.selected > .progressIcon > .progressLogo {
+  background: #f2e7d5 !important;
+  color: black;
+}

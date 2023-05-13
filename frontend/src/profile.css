@@ -64,9 +64,8 @@
   justify-content: center;
 }
 .profile-posts {
-  background: #f2f8fd;
   overflow-y: scroll;
-  height: 432px;
+  padding: 10px;
   scrollbar-width: thin;
   scrollbar-color: #0f8af9 lightgrey;
 }

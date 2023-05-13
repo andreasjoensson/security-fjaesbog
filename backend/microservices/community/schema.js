@@ -3,6 +3,7 @@ const { gql } = require("apollo-server-express");
 const typeDefs = gql`
   type Query {
     getCommunity(name: String!): Community
+    getCommunitiesByUser: [Community]!
   }
 
   type Mutation {

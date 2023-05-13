@@ -1,99 +1,98 @@
-.login{
-    display: flex;
-    height: 100vh;
+.login {
+  display: flex;
+  height: 100vh;
 }
 
-.login-container, .login-showcase{
-width: 50%;
+.login-container,
+.login-showcase {
+  width: 50%;
 }
-.list{
-    padding: 0px;
+.list {
+  padding: 0px;
 }
-.list > li{
-list-style-type: none;
-padding: 12px;
-background:red;
-color: white;
-border-radius: 13px;
-margin-top: 10px;
+.list > li {
+  list-style-type: none;
+  padding: 12px;
+  background: red;
+  color: white;
+  border-radius: 13px;
+  margin-top: 10px;
 }
-.registerA{
-    margin-top: 10px;
-    
+.registerA {
+  margin-top: 10px;
 }
-.login-container{
-    background: white;
-    display: flex;
-    flex-direction: column;
+.login-container {
+  background: white;
+  display: flex;
+  flex-direction: column;
 }
-.logo > img{
-    height: 152px;
-    width: 152px;
-    margin-left: 50px;
+.logo > img {
+  margin-top: 30px;
+  margin-left: 50px;
 }
 
-.loginForm{
-    display: flex;
-    flex-direction: column;
-    height: 250px;
-    justify-content: space-evenly;
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+  justify-content: space-evenly;
 }
-.login-showcase{
-    background: skyblue;
+.login-showcase {
+  background: black;
 }
-.loginContainer{
-    width: 65%;
-    margin: 0 auto;
+.loginContainer {
+  width: 65%;
+  margin: 0 auto;
+  margin-top: 150px;
 }
-.loginText > p{
-color: #BEC3C9;
-font-weight: 100;
+
+.loginText > h1 {
+  font: bold;
 }
-.loginText > h1{
-    font: bold;
+.loginForm > label {
+  color: black;
+  font-weight: 100;
 }
-.loginForm > label{
-    color: black;
-    font-weight: 100;
+.loginForm > .inputIcons > input {
+  border-radius: 10px;
+  padding: 15px;
+  outline: black;
+  border: 0.3px solid whitesmoke;
+  width: 100%;
 }
-.loginForm > .inputIcons > input{
-border-radius: 10px;
-padding: 15px;
-outline: #138DFF;
-border: 0.3px solid whitesmoke;
-width: 100%;
+.loginForm > button {
+  border: none;
+  height: 50px;
+  background: #000000;
+  margin-top: 15px;
+  font-size: 0.9rem;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+  border-radius: 10px;
 }
-.loginForm > button{
-    border: none;
-    height: 50px;
-    background:#138DFF;
-    margin-top: 15px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    color: white;
-    border-radius: 10px;
+.bottomLogin {
+  position: relative;
+  margin-top: 10px;
+  height: 25px;
 }
-.bottomLogin{
-position: relative;
-margin-top: 10px;
-height: 25px;
+.checkbox,
+.bottomLogin > a {
+  position: absolute;
 }
-.checkbox, .bottomLogin > a{
-position: absolute;
-}
-.checkbox{
-    left: 0;
+.checkbox {
+  left: 0;
 }
 .bottomLogin > a {
-    right: 0;
-    color: #138DFF;
-    cursor: pointer;
+  right: 0;
+  color: #000000;
+  cursor: pointer;
 }
-.inputIcons{
-    position: relative;
+.inputIcons {
+  position: relative;
 }
-.icon{
-    position: absolute;
-    right: 0;
-    bottom: 10px;
+.icon {
+  position: absolute;
+  right: 0;
+  bottom: 10px;
 }
