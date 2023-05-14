@@ -6,6 +6,7 @@ import { useState, useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
 import { AuthContext } from "./context/auth";
 import { useHistory } from "react-router";
+import Spline from "@splinetool/react-spline";
 
 const LOGIN_QUERY = gql`
   mutation login($name: String!, $password: String!) {
@@ -59,12 +60,12 @@ export default function Login() {
         </div>
 
         <div className="loginContainer">
-          <div className="loginText">
+          <div className="loginText mb-3">
             <h1>Log ind på din konto</h1>
             <p>Log ind for at få adgang til en commmunity af studerende!</p>
           </div>
 
-          <form className="loginForm" onSubmit={submitLogin}>
+          <form className="loginForm mt-3 " onSubmit={submitLogin}>
             <label>Brugernavn</label>
             <div className="inputIcons">
               <input
@@ -97,6 +98,7 @@ export default function Login() {
             <button type="submit" className="loginButton">
               Login
             </button>
+
             <a href="/register" className="registerA">
               Har du ikke lavet en konto endnu? Registrer her.
             </a>
@@ -112,8 +114,7 @@ export default function Login() {
           )}
         </div>
       </div>
-
-      <div className="login-showcase"></div>
+      <Spline scene="https://prod.spline.design/pLKWuaveD95hKu5i/scene.splinecode" />
     </div>
   );
 }

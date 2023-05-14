@@ -2,6 +2,7 @@ const pool = require("./database/db");
 const bcrypt = require("bcryptjs");
 const createToken = require("./auth/createToken");
 const { UserInputError } = require("apollo-server");
+const checkAuth = require("./auth/checkAuth");
 const { validateLoginInput } = require("./validations");
 
 module.exports = {
@@ -23,11 +24,11 @@ module.exports = {
       };
     },
     async getCommunityMembers(_, { name }) {
-      const getCommunityID = await db.query(
+      const getCommunityID = await pool.query(
         "SELECT id FROM community where name = $1",
         [name]
       );
-      const members = await db.query(
+      const members = await pool.query(
         "SELECT users_id FROM members WHERE community_id = $1",
         [getCommunityID.rows[0].id]
       );
@@ -65,6 +66,8 @@ module.exports = {
         [school.Navn, school.Logo]
       );
 
+      console.log("schoolInsert", schoolInsert);
+
       let now = new Date(); //getting current date
       let currentY = now.getFullYear(); //extracting year from the date
       let currentM = now.getMonth(); //extracting month from the date
@@ -89,6 +92,9 @@ module.exports = {
           new Date().toISOString().slice(0, 19).replace("T", " "),
         ]
       );
+
+      console.log("users", res);
+
       console.log("res", res.rows[0]);
       const token = createToken(res.rows[0]);
       console.log("token", token);
@@ -99,7 +105,7 @@ module.exports = {
     },
     async addMember(_, { community_id }, context) {
       const user = checkAuth(context);
-      const getMembers = await db.query(
+      const getMembers = await pool.query(
         "SELECT * FROM members WHERE community_id = $1",
         [community_id]
       );
@@ -110,14 +116,14 @@ module.exports = {
         console.log(
           "user is already member, so unfollow member from community"
         );
-        const removeMember = await db.query(
+        const removeMember = await pool.query(
           "DELETE FROM members WHERE community_id =$1 AND users_id = $2 RETURNING*",
           [community_id, user.user_id]
         );
         return removeMember.rows[0];
       }
 
-      const addMember = await db.query(
+      const addMember = await pool.query(
         "INSERT INTO members(community_id, users_id) VALUES($1,$2) RETURNING *",
         [community_id, user.user_id]
       );

@@ -4,6 +4,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import schoolLogo from "../src/assets/school.png";
 import { useQuery, gql } from "@apollo/client";
 import Post from "./components/Post/Post";
+import { useEffect } from "react";
 
 export default function Profile() {
   let { id } = useParams();
@@ -40,6 +41,10 @@ export default function Profile() {
     variables: { name: id },
   });
 
+  useEffect(() => {
+    console.log("data", data);
+  }, [data]);
+
   if (loading)
     return (
       <div class="lds-circle">
@@ -60,18 +65,28 @@ export default function Profile() {
             }
             className="profileCover"
           />
-          <div className="profile-pic">
-            <img src={data?.getProfile.profilepic} className="profilePic" />
-          </div>
-          <div className="profile-name">
-            <h4 className="profileName">{data?.getProfile.name}</h4>
-          </div>
         </div>
-        <div className="profile-stats">
+
+        <div className="profile-section">
+          <div className="profile-stats">
+            <div className="profile-pic">
+              <img
+                src={
+                  data?.getProfile.profilepic
+                    ? data?.getProfile.profilepic
+                    : "https://www.mico.dk/wp-content/uploads/2020/05/blank-profile-picture-973460_1280.png"
+                }
+                className="profilePic me-3"
+              />
+            </div>
+            <div className="profile-name">
+              <h4 className="profileName">{data?.getProfile.name}</h4>
+            </div>
+          </div>
           <div className="profile-bar">
             <ul className="stats">
               <li className="stat">
-                <img src={schoolLogo} className="schoolLogo"></img>
+                <img src={schoolLogo} width={90} className="schoolLogo"></img>
                 <span>{data?.getProfile.school.name}</span>
               </li>
               <li className="stat">
@@ -87,9 +102,6 @@ export default function Profile() {
                 <span>E-mail</span>
               </li>
             </ul>
-          </div>
-          <div className="profile-info">
-            <div className="profile-place"></div>
           </div>
         </div>
 

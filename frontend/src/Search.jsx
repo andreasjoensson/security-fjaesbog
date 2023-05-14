@@ -61,12 +61,26 @@ export default function Search() {
             {newData.map((item) =>
               item.description == null ? (
                 <a className="searchItem" href={`/profile/${item.name}`}>
-                  <img src={item.profilepic} className="searchPic" />
+                  <img
+                    src={
+                      item.profilepic.length > 0
+                        ? item.profilepic
+                        : "https://www.pudsprodukter.dk/wp-content/uploads/2016/08/facebook-default-no-profile-pic.jpg"
+                    }
+                    className="searchPic"
+                  />
                   <p>{item.name}</p>
                 </a>
               ) : (
                 <a className="searchItem" href={`/profile/${item.name}`}>
-                  <img src={item.profilepic} className="searchPic" />
+                  <img
+                    src={
+                      item.profilepic.length > 0
+                        ? item.profilepic
+                        : "https://www.pudsprodukter.dk/wp-content/uploads/2016/08/facebook-default-no-profile-pic.jpg"
+                    }
+                    className="searchPic"
+                  />
                   <p>{item.name}</p>
                   <p>{item.description}</p>
                 </a>

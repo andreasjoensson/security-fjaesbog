@@ -109,7 +109,7 @@ function Post({ post_id, name, profilePic, createdAt, title, text, image }) {
         {user.name == name ? <DeletePost id={post_id} /> : <p></p>}
       </div>
       <div className="postContent">
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         <p>{text}</p>
         {image !== "" || "" ? (
           <img src={image} className="postPicture" />

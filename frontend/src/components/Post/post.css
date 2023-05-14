@@ -18,6 +18,11 @@
   object-fit: cover;
   border-radius: 50%;
 }
+
+.postContent {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
 .postUser {
   display: flex;
   position: relative;
@@ -45,6 +50,14 @@ h3 {
   justify-content: space-evenly;
   width: 150px;
 }
+.postLikes > p {
+  margin-bottom: 0px;
+}
+
+.postComments > p {
+  margin-bottom: 0px;
+}
+
 .postComment {
   display: flex;
   position: relative;

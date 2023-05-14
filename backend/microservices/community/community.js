@@ -24,9 +24,7 @@ module.exports = {
         [user.user_id]
       );
 
-      return {
-        communities: getCommunityQuery.rows,
-      };
+      return getCommunityQuery.rows || [];
     },
   },
   Mutation: {

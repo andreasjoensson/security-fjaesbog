@@ -1,17 +1,19 @@
-.input-post{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
+.input-post {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
-.text-input{
-    position: relative;
-    display: flex;
+.text-input {
+  position: relative;
+  display: flex;
 }
-.sendIcon, .imageIcon{
-    position: absolute !important;
-    right: 0;
-    cursor: pointer;
+.sendIcon,
+.imageIcon {
+  position: absolute !important;
+  right: 0;
+  cursor: pointer;
+  top: 0;
 }
-.sendIcon{
-    right: 30px;
+.sendIcon {
+  right: 30px;
 }

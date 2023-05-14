@@ -5,6 +5,18 @@
 .profile-container {
   flex: 3;
 }
+
+.profile-stats {
+  display: flex;
+  align-items: center;
+}
+
+.profile-section {
+  display: flex;
+  margin-bottom: 60px;
+  margin-top: 60px;
+  justify-content: space-around;
+}
 .profile-cover {
   width: 100%;
   object-fit: cover;
@@ -16,7 +28,7 @@
   width: 100%;
 }
 .profileName {
-  color: white;
+  color: rgb(0, 0, 0);
   font-size: 1.6rem;
   margin: 0px;
 }
@@ -30,11 +42,6 @@
   display: flex;
   justify-content: center;
   background: white;
-}
-.profile-name {
-  position: absolute;
-  bottom: 10px;
-  left: 160px;
 }
 .profile-place {
   display: flex;
@@ -78,15 +85,7 @@
 .statCount {
   font-weight: bold;
 }
-.profileName {
-  background: black;
-  padding: 2px;
-}
-.profile-pic {
-  position: absolute;
-  bottom: -25px;
-  left: 50px;
-}
+
 .schoolLogo {
-  max-width: 70px;
+  max-width: 40px;
 }

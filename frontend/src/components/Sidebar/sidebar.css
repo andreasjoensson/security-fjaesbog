@@ -22,11 +22,21 @@ a {
   display: flex;
   align-items: center;
   color: #86a2b8;
+  margin-bottom: 30px;
   position: relative;
   cursor: pointer;
 }
 .sidebarItem > p {
   font-weight: 500;
+  margin-bottom: 0px;
+}
+.sidebarIcon {
+  width: 24px;
+  height: 24px;
+  margin-left: 50px;
+  margin-right: 8px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .sidebarLogo {
   margin-left: 50px;

@@ -10,6 +10,7 @@ import {
 import { gql, useQuery } from "@apollo/client";
 import { CopyrightOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { AccountCircleOutlined } from "@material-ui/icons";
 import { Redirect, useHistory } from "react-router-dom";
 import { useContext } from "react";
@@ -23,16 +24,18 @@ function Sidebar({ currentPage }) {
       getCommunitiesByUser {
         id
         name
-        description
         profilepic
-        coverpic
-        created_at
-        members
       }
     }
   `;
 
-  const { data, loading } = useQuery(GET_COMMUNITIES_QUERY);
+  const { data, loading, error } = useQuery(GET_COMMUNITIES_QUERY);
+
+  useEffect(() => {
+    console.log("Loading:", loading);
+    console.log("Data:", data);
+    console.log("Error:", error);
+  }, [loading, data, error]);
 
   if (loading)
     return (
@@ -47,7 +50,6 @@ function Sidebar({ currentPage }) {
         <img src={logo} />
       </div>
       <nav>
-        {loading ? "loader.." : console.log(data)}
         <ul className="sidebarNav">
           <Link to="/dashboard">
             <li
@@ -101,18 +103,20 @@ function Sidebar({ currentPage }) {
               <p>Opret forum</p>
             </li>
           </Link>
-
-          <Link to="/forum/Skole">
-            <li
-              className={`sidebarItem ${
-                currentPage == "Skole" ? "active" : ""
-              }`}
-            >
-              <div className="active-line"></div>
-              <SchoolOutlined className="sidebarLogo" />
-              <p>Skole</p>
-            </li>
-          </Link>
+          {data?.getCommunitiesByUser.map((community) => (
+            <Link to={`/forum/${community.name}`}>
+              <li
+                className={`sidebarItem ${
+                  currentPage == community.name ? "active" : ""
+                }`}
+              >
+                <div className="active-line"></div>
+                <img className="sidebarIcon" src={community.profilepic} />
+                <p>{community.name}</p>
+              </li>
+            </Link>
+          ))}
+          ;
         </ul>
       </nav>
 

@@ -79,7 +79,7 @@ export default function RegisterStepFive({
           createUserProfileCover: user.coverPic,
           createUserAge: user.age,
           createUserSchool: user.school,
-          createUserProfilePicture: user.profilePic.length,
+          createUserProfilePicture: user.profilePic,
         },
       });
     }

@@ -50,7 +50,7 @@ export default function Forum() {
     }
   `;
 
-  const { data, loading } = useQuery(GET_COMMUNITY_QUERY, {
+  const { data, error, loading } = useQuery(GET_COMMUNITY_QUERY, {
     variables: {
       name: id,
     },
@@ -61,12 +61,15 @@ export default function Forum() {
   });
 
   useEffect(() => {
+    console.log("Loading:", loading);
+    console.log("Data:", data);
+    console.log("Error:", error);
     setAlreadyMember(
       data?.getCommunityMembers.filter(
         (member) => member.users_id == user.user_id
       ).length > 0
     );
-  }, [data]);
+  }, [loading, data, error]);
 
   return (
     <div className="container-fluid">

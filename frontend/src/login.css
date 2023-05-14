@@ -34,15 +34,14 @@
 .loginForm {
   display: flex;
   flex-direction: column;
-  height: 250px;
   justify-content: space-evenly;
 }
 .login-showcase {
   background: black;
 }
 .loginContainer {
-  width: 65%;
-  margin: 0 auto;
+  padding-left: 65px;
+  padding-right: 65px;
   margin-top: 150px;
 }
 
@@ -51,7 +50,7 @@
 }
 .loginForm > label {
   color: black;
-  font-weight: 100;
+  font-weight: 400;
 }
 .loginForm > .inputIcons > input {
   border-radius: 10px;
@@ -93,6 +92,6 @@
 }
 .icon {
   position: absolute;
-  right: 0;
-  bottom: 10px;
+  right: 10px;
+  bottom: 15px;
 }
