@@ -3,6 +3,7 @@ const pool = require("../database/db");
 const bcrypt = require("bcryptjs");
 const createToken = require("./createToken");
 const { MailtrapClient } = require("mailtrap");
+require("dotenv").config();
 
 async function sendPasswordResetEmail(userEmail) {
   // Generate a unique token
@@ -11,8 +12,8 @@ async function sendPasswordResetEmail(userEmail) {
   // TODO: Store the token in your database, associated with the user's email.
   await storePasswordResetToken(userEmail, token);
 
-  const TOKEN = "472dda25f9e5953fe9887f1d7a8b9d56";
-  const ENDPOINT = "https://send.api.mailtrap.io/";
+  const TOKEN = process.env.TOKEN;
+  const ENDPOINT = process.env.ENDPOINT;
 
   const client = new MailtrapClient({ endpoint: ENDPOINT, token: TOKEN });
 
