@@ -1,0 +1,15 @@
+# Fjæsbog
+
+## Introduktion
+
+Fjæsbog er et socialt medie, hvor brugere kan skrive opslag og oprette fællesskaber. Formålet er at skabe et rum, hvor folk kan dele idéer og interagere med hinanden.
+
+## Teknologier
+
+Frontenden er bygget med React, GraphQL og Bootstrap. Dette giver en moderne og responsiv brugergrænseflade, der er intuitiv at navigere i.
+
+Backenden er opdelt i fem microservices: "Posts", "Community", "Users", "Reactions" og en "Gateway". Alle disse services er bygget med Node.js og GraphQL. Gatewayen samler alle services, så backenden kan tilgås fra et enkelt, centralt API.
+
+Databasen er PostgreSQL, som sikrer effektiv og sikker opbevaring af brugerdata, opslag, communities og reaktioner.
+
+Til at håndtere meddelelser internt mellem microservices bruges RabbitMQ. Dette sikrer effektiv kommunikation og koordination mellem services.
