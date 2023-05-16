@@ -1,0 +1,36 @@
+# Community Microservice
+
+## Introduktion
+
+Dette er en microservice til håndtering af communities. Den er bygget med Node.js og GraphQL, og tillader hentning af communities baseret på navn eller bruger, samt oprettelse af nye communities.
+
+## Forudsætninger
+
+- Node.js
+- En kørende instance af din foretrukne GraphQL server (Apollo server anbefales)
+- En database til at gemme dine communities (PostgreSQL)
+
+## Installation
+
+1. Klon dette repository til din lokale maskine:
+
+```bash
+git clone https://github.com/andreasjoensson/mandatory.git
+
+    Naviger til mappen for dette projekt og installer afhængigheder:
+
+bash
+
+cd backend/microservices/community
+npm install
+
+Brug
+
+For at starte serveren, kør:
+
+bash
+
+npm start
+
+Serveren vil nu køre på http://localhost:5000
+```

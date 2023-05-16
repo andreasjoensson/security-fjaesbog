@@ -1,0 +1,29 @@
+# Gateway Microservice
+
+## Introduktion
+
+Gateway microservicen er hjertet af vores applikation. Den er bygget med Node.js og GraphQL og dens primære formål er at samle alle de forskellige microservices, så vi kun skal kalde et enkelt API fra vores frontend. Denne service indeholder "Posts", "Community", "Users" og "Reactions" microservices.
+
+## Forudsætninger
+
+- Node.js
+- En kørende instance af din foretrukne GraphQL server (Apollo server anbefales)
+- Alle microservices ("Posts", "Community", "Users", "Reactions") skal være operationelle og tilgængelige
+
+## Installation
+
+1. Klon dette repository til din lokale maskine:
+
+```bash
+git clone https://github.com/andreasjoensson/mandatory
+
+    Naviger til mappen for dette projekt og installer afhængigheder:
+
+
+cd microservices/gateway
+npm install
+
+For at starte serveren, kør:
+
+npm start
+```

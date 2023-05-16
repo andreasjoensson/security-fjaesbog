@@ -1,0 +1,34 @@
+# Posts Microservice
+
+## Introduktion
+
+Dette er en microservice til håndtering af opslag (posts). Den er bygget med Node.js og GraphQL. Med denne service kan du oprette og slette opslag, hente opslag, samt hente opslag baseret på bruger eller community.
+
+## Forudsætninger
+
+- Node.js
+- En kørende instance af din foretrukne GraphQL server (Apollo server anbefales)
+- En database til at gemme dine opslag (MongoDB, PostgreSQL, etc.)
+
+## Installation
+
+1. Klon dette repository til din lokale maskine:
+
+```bash
+git clone https://github.com/andreasjoensson/mandatory.git
+
+    Naviger til mappen for dette projekt og installer afhængigheder:
+
+bash
+
+cd backend/microservices/posts
+npm install
+
+Brug
+
+For at starte serveren, kør:
+
+bash
+
+npm start
+```

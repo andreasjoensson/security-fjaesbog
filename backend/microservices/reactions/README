@@ -1,0 +1,33 @@
+# Reactions Microservice
+
+## Introduktion
+
+Dette er en microservice til håndtering af reaktioner (reactions). Den er bygget med Node.js og GraphQL. Med denne service kan du like og dislike opslag, oprette og slette kommentarer, samt like eller dislike kommentarer. Du kan også hente likes, hente kommentar likes og hente kommentarer.
+
+## Forudsætninger
+
+- Node.js
+- En kørende instance af din foretrukne GraphQL server (Apollo server anbefales)
+- En database til at gemme dine reaktioner og kommentarer PostgreSQL
+
+## Installation
+
+1. Klon dette repository til din lokale maskine:
+
+```bash
+git clone https://github.com/andreasjoensson/mandatory.git
+
+    Naviger til mappen for dette projekt og installer afhængigheder:
+
+bash
+
+cd backend/microservices/reactions
+npm install
+
+For at starte serveren, kør:
+
+npm start
+
+Serveren vil nu køre på http://localhost:4000 (eller hvad end du har konfigureret).
+
+```
