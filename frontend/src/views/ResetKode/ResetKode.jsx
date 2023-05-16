@@ -1,25 +1,29 @@
 import "./forgotpassword.css";
 import logo from "../../assets/logo.png";
-import { AccountCircleOutlined, MailOutline } from "@material-ui/icons";
 import { Lock } from "@material-ui/icons";
 import { useState, useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { AuthContext } from "../../context/auth";
-import { useHistory } from "react-router";
+import { useParams } from "react-router-dom";
 import "./ResetKode.css";
 import Spline from "@splinetool/react-spline";
 
 const GLEMT_KODE_QUERY = gql`
-  mutation login($name: String!, $password: String!) {
-    login(name: $name, password: $password) {
-      token
+  mutation ResetKode($token: String!, $password: String!) {
+    resetKode(token: $token, password: $password) {
       user_id
-      email
+      name
       password
       age
+      school {
+        name
+        logo
+      }
+      email
       profilepic
       profilecover
-      name
+      token
+      created_at
+      last_login
     }
   }
 `;
@@ -27,9 +31,10 @@ const GLEMT_KODE_QUERY = gql`
 export default function ResetKode() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const { token } = useParams();
 
-  const [login] = useMutation(GLEMT_KODE_QUERY, {
-    update(_, { data: { login: userData } }) {
+  const [resetKode] = useMutation(GLEMT_KODE_QUERY, {
+    update(_, { data: { resetKode: userData } }) {
       console.log("user", userData);
     },
     onError(err) {
@@ -40,9 +45,10 @@ export default function ResetKode() {
   const submitLogin = (e) => {
     e.preventDefault();
 
-    login({
+    resetKode({
       variables: {
-        email: email,
+        token: token,
+        password: password,
       },
     });
   };

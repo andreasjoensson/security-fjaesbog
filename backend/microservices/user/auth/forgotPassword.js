@@ -1,7 +1,9 @@
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const pool = require("../database/db");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
+const createToken = require("./createToken");
+const { MailtrapClient } = require("mailtrap");
 
 async function sendPasswordResetEmail(userEmail) {
   // Generate a unique token
@@ -10,28 +12,28 @@ async function sendPasswordResetEmail(userEmail) {
   // TODO: Store the token in your database, associated with the user's email.
   await storePasswordResetToken(userEmail, token);
 
-  // Create a transporter
-  var transport = nodemailer.createTransport({
-    host: "sandbox.smtp.mailtrap.io",
-    port: 2525,
-    auth: {
-      user: "721a5f3a4d806a",
-      pass: "ba7aca2b4dd973",
-    },
-  });
+  const TOKEN = "472dda25f9e5953fe9887f1d7a8b9d56";
+  const ENDPOINT = "https://send.api.mailtrap.io/";
 
-  // Send the email
-  let info = await transport.sendMail({
-    from: '"Andreas Jønsson" andreas.ecuador@live.dk',
-    to: userEmail,
-    subject: "Password reset",
-    text: `Du modtager denne, fordi du (eller nogen andre) har anmodet om at nulstille adgangskoden til din konto.
-        Venligst klik på følgende link, eller indsæt det i din browser for at fuldføre processen indenfor en time efter at have modtaget det:
-        http://localhost:3000/reset/${token}
-        Hvis du ikke anmodede om dette, bedes du ignorere denne e-mail, og din adgangskode vil forblive uændret`,
-  });
+  const client = new MailtrapClient({ endpoint: ENDPOINT, token: TOKEN });
 
-  console.log("Password reset email sent: %s", info.messageId);
+  const sender = {
+    email: "mailtrap@andreasmoreno.dk",
+    name: "Andreas Moreno",
+  };
+
+  client
+    .send({
+      from: sender,
+      to: userEmail,
+      subject: "Password reset",
+      text: `Du modtager denne, fordi du (eller nogen andre) har anmodet om at nulstille adgangskoden til din konto.
+    Venligst klik på følgende link, eller indsæt det i din browser for at fuldføre processen indenfor en time efter at have modtaget det:
+    http://localhost:3000/reset/${token}
+    Hvis du ikke anmodede om dette, bedes du ignorere denne e-mail, og din adgangskode vil forblive uændret`,
+      category: "Password",
+    })
+    .then(console.log, console.error);
 }
 
 async function resetPassword(token, newPassword) {
@@ -63,7 +65,16 @@ async function resetPassword(token, newPassword) {
       "DELETE FROM password_reset_tokens WHERE token = $1";
     await client.query(deleteTokenQuery, [token]);
 
+    // Fetch the user's details
+    const userQuery = "SELECT * FROM users WHERE email = $1";
+    const userResult = await client.query(userQuery, [email]);
+    const user = userResult.rows[0];
+
     await client.query("COMMIT");
+    return {
+      ...user,
+      token: createToken(user),
+    };
   } catch (e) {
     await client.query("ROLLBACK");
     throw e;

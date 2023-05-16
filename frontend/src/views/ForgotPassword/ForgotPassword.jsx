@@ -9,17 +9,8 @@ import { useHistory } from "react-router";
 import Spline from "@splinetool/react-spline";
 
 const GLEMT_KODE_QUERY = gql`
-  mutation login($name: String!, $password: String!) {
-    login(name: $name, password: $password) {
-      token
-      user_id
-      email
-      password
-      age
-      profilepic
-      profilecover
-      name
-    }
+  mutation ForgotPassword($email: String!) {
+    forgotPassword(email: $email)
   }
 `;
 
@@ -27,8 +18,8 @@ export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
 
-  const [login] = useMutation(GLEMT_KODE_QUERY, {
-    update(_, { data: { login: userData } }) {
+  const [forgotPassword] = useMutation(GLEMT_KODE_QUERY, {
+    update(_, { data: { ForgotPassword: userData } }) {
       console.log("user", userData);
     },
     onError(err) {
@@ -39,7 +30,7 @@ export default function ForgotPassword() {
   const submitLogin = (e) => {
     e.preventDefault();
 
-    login({
+    forgotPassword({
       variables: {
         email: email,
       },
@@ -64,6 +55,7 @@ export default function ForgotPassword() {
             <div className="inputIcons">
               <input
                 type="text"
+                value={email}
                 placeholder="Indtast din e-mail"
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -71,7 +63,7 @@ export default function ForgotPassword() {
             </div>
 
             <button type="submit" className="loginButton">
-              Login
+              Send Email
             </button>
 
             <a href="/register" className="registerA">

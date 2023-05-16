@@ -22,7 +22,7 @@ const typeDefs = gql`
     login(name: String!, password: String!): User
     addMember(community_id: ID!): Member
     forgotPassword(email: String!): String
-    resetKode(token: String!, password: String!): String
+    resetKode(token: String!, password: String!): User
   }
 
   type School {

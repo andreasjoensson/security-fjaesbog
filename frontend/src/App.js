@@ -21,7 +21,7 @@ function App() {
         <Route exact path="/glemtkode">
           <ForgotPassword />
         </Route>
-        <Route exact path="/resetkode/:id">
+        <Route exact path="/resetkode/:token">
           <ForgotPassword />
         </Route>
         <Route exact path="/register">
