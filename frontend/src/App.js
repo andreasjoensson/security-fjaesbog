@@ -9,6 +9,7 @@ import Profile from "./views/Profile/Profile";
 import Forum from "./views/Forum/Forum";
 import CreateForum from "./views/CreateForum/CreateForum";
 import Search from "./views/SearchPage/Search";
+import ForgotPassword from "./views/ForgotPassword/ForgotPassword";
 
 function App() {
   return (
@@ -16,6 +17,12 @@ function App() {
       <Router history={history}>
         <Route exact path="/">
           <Login />
+        </Route>
+        <Route exact path="/glemtkode">
+          <ForgotPassword />
+        </Route>
+        <Route exact path="/resetkode/:id">
+          <ForgotPassword />
         </Route>
         <Route exact path="/register">
           <Register />

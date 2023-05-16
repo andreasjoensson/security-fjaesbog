@@ -1,12 +1,12 @@
 import "./register.css";
 import logo from "../../assets/logo.png";
 import { useState } from "react";
-import RegisterStepOne from "../../Register/Steps/StepOne/RegisterStepOne";
-import RegisterStepTwo from "../../Register/Steps/StepTwo/RegisterStepTwo";
-import RegisterStepThree from "../../Register/Steps/StepThree/RegisterStepThree";
-import RegisterStepFour from "../../Register/Steps/StepFour/RegisterStepFour";
+import RegisterStepOne from "../../components/RegisterSteps/StepOne/RegisterStepOne";
+import RegisterStepTwo from "../../components/RegisterSteps/StepTwo/RegisterStepTwo";
+import RegisterStepThree from "../../components/RegisterSteps/StepThree/RegisterStepThree";
+import RegisterStepFour from "../../components/RegisterSteps/StepFour/RegisterStepFour";
 import RegisterStepFive from "../../components/RegisterSteps/StepFive/RegisterStepFive";
-import RegisterStepper from "../../Register/Stepper/RegisterStepper";
+import RegisterStepper from "../../components/Stepper/RegisterStepper";
 
 function RegisterMainComponent({ step, setUser, user }) {
   const changeAge = (e) => {

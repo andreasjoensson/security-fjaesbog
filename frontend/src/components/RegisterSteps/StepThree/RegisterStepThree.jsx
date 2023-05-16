@@ -1,7 +1,5 @@
 import "./registerstepthree.css";
-import RegisterStepper from "../../Stepper/RegisterStepper";
 import { uploadImage } from "../../../firebase";
-import { AccountCircle, Photo } from "@material-ui/icons";
 import { useState } from "react";
 
 export default function RegisterStepThree({
