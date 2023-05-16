@@ -1,10 +1,10 @@
 import "./login.css";
-import logo from "./logo.png";
+import logo from "../../assets/logo.png";
 import { AccountCircleOutlined, MailOutline } from "@material-ui/icons";
 import { Lock } from "@material-ui/icons";
 import { useState, useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
-import { AuthContext } from "./context/auth";
+import { AuthContext } from "../../context/auth";
 import { useHistory } from "react-router";
 import Spline from "@splinetool/react-spline";
 

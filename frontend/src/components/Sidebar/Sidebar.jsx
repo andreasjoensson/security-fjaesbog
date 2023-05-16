@@ -1,5 +1,5 @@
 import "./sidebar.css";
-import logo from "../../logo.png";
+import logo from "../../assets/logo.png";
 import {
   AssessmentRounded,
   FaceOutlined,

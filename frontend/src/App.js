@@ -1,14 +1,14 @@
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import Login from "./Login";
-import Dashboard from "./Dashboard";
+import Login from "./views/Login/Login";
+import Dashboard from "./views/Dashboard/Dashboard";
 import { AuthProvider } from "./context/auth";
-import Register from "./Register/Register";
+import Register from "./views/Register/Register";
 import history from "./context/history";
-import Profile from "./Profile";
-import Forum from "./Forum";
-import CreateForum from "./Register/CreateForum";
-import Search from "./Search";
+import Profile from "./views/Profile/Profile";
+import Forum from "./views/Forum/Forum";
+import CreateForum from "./views/CreateForum/CreateForum";
+import Search from "./views/SearchPage/Search";
 
 function App() {
   return (

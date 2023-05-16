@@ -1,12 +1,11 @@
 import "./profile.css";
 import { useParams } from "react-router-dom";
-import Sidebar from "./components/Sidebar/Sidebar";
-import schoolLogo from "../src/assets/school.png";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import schoolLogo from "../../assets/school.png";
 import { useQuery, gql } from "@apollo/client";
-import Post from "./components/Post/Post";
+import Post from "../../components/Post/Post";
 import { useEffect } from "react";
 import CameraAltOutlinedIcon from "@material-ui/icons/CameraAltOutlined";
-import CreatePost from "./components/createPost/CreatePost";
 
 export default function Profile() {
   let { id } = useParams();

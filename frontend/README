@@ -1,0 +1,44 @@
+# Fjæsbog Frontend
+
+## Introduktion
+
+Dette er frontenden for Fjæsbog, et socialt medie, hvor brugere kan skrive opslag og oprette fællesskaber. Frontenden er bygget med React, GraphQL og Bootstrap.
+
+## Struktur
+
+Frontenden er organiseret i to primære kategorier: "Views" og "Components".
+
+"Views" repræsenterer de forskellige sider på websitet, såsom hjemmesiden, brugerprofiler, community sider, osv.
+
+"Components" indeholder genbrugelige React komponenter, der anvendes på tværs af de forskellige views, såsom knapper, formularer, kort, osv.
+
+Vi har også en "Webscraper" mappe, der indeholder scripts til indsamling af data om Folkeskoler, Gymnasier, og Videregående uddannelser. Disse scripts gemmer dataen i en JSON fil.
+
+## Teknologier
+
+Vi bruger React-Routing til at skifte mellem de forskellige sider.
+
+Vi bruger også React Context til at håndtere bruger autentikation. Dette gør det nemt at logge brugere ud, og vedligeholde brugerens autentikation på tværs af sider.
+
+## Installation
+
+1. Klon dette repository til din lokale maskine:
+
+```bash
+git clone https://github.com/andreasjoensson/mandatory.git
+
+    Naviger til mappen for dette projekt og installer afhængigheder:
+
+bash
+
+cd frontend
+npm install
+
+Brug
+
+For at starte serveren, kør:
+
+bash
+
+npm start
+```

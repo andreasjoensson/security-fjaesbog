@@ -1,5 +1,5 @@
 import "./search.css";
-import Sidebar from "./components/Sidebar/Sidebar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import { gql, useQuery } from "@apollo/client";
 import { useState } from "react";
 

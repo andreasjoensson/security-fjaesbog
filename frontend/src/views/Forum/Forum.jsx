@@ -1,14 +1,14 @@
 import "./forum.css";
 import { useParams } from "react-router";
 import { gql, useQuery, useMutation } from "@apollo/client";
-import Post from "./components/Post/Post";
-import Sidebar from "./components/Sidebar/Sidebar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import { useState } from "react";
 import { useContext, useEffect } from "react";
-import { AuthContext } from "./context/auth";
-import CreatePost from "./components/createPost/CreatePost";
+import { AuthContext } from "../../context/auth";
+import CreatePost from "../../components/createPost/CreatePost";
 import { Accessibility } from "@material-ui/icons";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
+import Post from "../../components/Post/Post";
 
 export default function Forum() {
   let { id } = useParams();

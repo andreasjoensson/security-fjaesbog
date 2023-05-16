@@ -1,8 +1,8 @@
-import Sidebar from "../components/Sidebar/Sidebar";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import "./createforum.css";
 import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
-import { uploadImage } from "../firebase";
+import { uploadImage } from "../../firebase";
 import { useHistory } from "react-router";
 
 export default function CreateForum() {
