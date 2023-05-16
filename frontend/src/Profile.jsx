@@ -5,6 +5,8 @@ import schoolLogo from "../src/assets/school.png";
 import { useQuery, gql } from "@apollo/client";
 import Post from "./components/Post/Post";
 import { useEffect } from "react";
+import CameraAltOutlinedIcon from "@material-ui/icons/CameraAltOutlined";
+import CreatePost from "./components/createPost/CreatePost";
 
 export default function Profile() {
   let { id } = useParams();
@@ -86,7 +88,7 @@ export default function Profile() {
           <div className="profile-bar">
             <ul className="stats">
               <li className="stat">
-                <img src={schoolLogo} width={90} className="schoolLogo"></img>
+                <img src={schoolLogo} className="schoolLogo mb-3"></img>
                 <span>{data?.getProfile.school.name}</span>
               </li>
               <li className="stat">
@@ -104,11 +106,11 @@ export default function Profile() {
             </ul>
           </div>
         </div>
-
         <div className="profile-posts">
           {data?.getPostsFromUser.length === 0 ? (
-            <div>
-              <h1>Denne bruger har ingen opslag endnu</h1>
+            <div className="notFound d-flex justify-content-center">
+              <CameraAltOutlinedIcon style={{ fontSize: 40 }} />
+              <h5 className="mt-3">Ingen opslag endnu</h5>
             </div>
           ) : (
             <div>

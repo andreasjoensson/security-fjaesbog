@@ -21,6 +21,7 @@ export default function RegisterStepThree({
 
   const addProfilePic = async (e) => {
     const image = await uploadImage(e.target.files[0]);
+    console.log("image", image);
     changeProfilePic(image);
     setProfilePic(image);
   };

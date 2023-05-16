@@ -66,3 +66,8 @@
     transform: rotateY(3600deg);
   }
 }
+
+label,
+small {
+  display: block;
+}

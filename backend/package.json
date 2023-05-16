@@ -4,7 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "index.js"
+    "start:service1": "cd microservices/community && npm start &",
+    "start:service2": "cd microservices/posts && npm start &",
+    "start:service3": "cd microservices/reactions && npm start &",
+    "start:service4": "cd microservices/user && npm start &",
+    "start:service5": "cd microservices/gateway && node index.js &",
+    "start": "npm run start:service1 && sleep 5 && npm run start:service2 && sleep 5 && npm run start:service3 && sleep 5 && npm run start:service4 && sleep 5 && npm run start:service5"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +22,7 @@
     "graphql": "^15.5.1",
     "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.12",
+    "npm-run-all": "^4.1.5",
     "pg": "^8.7.1"
   }
 }

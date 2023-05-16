@@ -8,6 +8,7 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "./context/auth";
 import CreatePost from "./components/createPost/CreatePost";
 import { Accessibility } from "@material-ui/icons";
+import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 
 export default function Forum() {
   let { id } = useParams();
@@ -125,7 +126,7 @@ export default function Forum() {
                 <span>{data?.getCommunity.members} medlemmer</span>
               </div>
             </div>
-            <div className="communityDescription">
+            <div className="communityDescription mt-3">
               <p>{data?.getCommunity.description}</p>
             </div>
           </div>
@@ -154,11 +155,11 @@ export default function Forum() {
                 </div>
               </>
             ) : (
-              <div>
-                {" "}
-                <h2 className="noaccess">
+              <div className="d-flex noaccess mt-5 justify-content-center">
+                <RemoveCircleOutlineIcon fontSize="large" />
+                <h5>
                   Join den her community, før du kan oprette og se opslag....
-                </h2>{" "}
+                </h5>
               </div>
             )}
           </div>

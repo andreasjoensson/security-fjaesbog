@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref } from "firebase/storage";
+import { getDownloadURL } from "firebase/storage";
+import { uploadBytesResumable } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDb8SkW1JVTn75esaj6lyVtyvAr0WqMPn4",
@@ -15,14 +17,25 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const uploadImage = async (image) => {
-  const imageRef = ref(`images/${image.name}`);
-  await imageRef.put(image).catch((error) => {
-    throw error;
-  });
-  const url = await imageRef.getDownloadURL().catch((error) => {
-    throw error;
-  });
-  return url;
+  if (!image) return;
+  const storageRef = ref(storage, `images/${image.name}`);
+  const uploadTask = uploadBytesResumable(storageRef, image);
+
+  uploadTask.on(
+    "state_changed",
+    (snapshot) => {
+      const prog = Math.round(
+        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+      );
+    },
+    (error) => console.log(error)
+  );
+  await uploadTask; // 👈 uploadTask is a promise itself, so you can await it
+
+  let downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  // 👆 getDownloadURL returns a promise too, so... yay more await
+
+  return downloadURL; // 👈 return the URL to the caller
 };
 
 export { uploadImage };

@@ -80,25 +80,33 @@ export default function CreateForum() {
             </div>
           </div>
 
-          <div className="createForum">
-            <form className="forum-form">
-              <label className="labelTitle">Navn</label>
-              <span>Indtast et navn til dit forum, kan ikke fortrydes.</span>
-
-              <input
-                type="text"
-                placeholder="r/"
-                onChange={(e) => setName(e.target.value)}
-              />
-
-              <label className="labelTitle">Hvad handler dit forum om?</label>
-              <input
-                type="text"
-                placeholder="Kort beskrivelse..."
-                onChange={(e) => setDescription(e.target.value)}
-              />
-
-              <button className="createForumBtn" onClick={submitCommunity}>
+          <div className="createForum mt-5">
+            <form>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Navn til forum</label>
+                <input
+                  type="text"
+                  placeholder="r/"
+                  className="form-control"
+                  onChange={(e) => setName(e.target.value)}
+                />
+                <small id="emailHelp" class="form-text text-muted">
+                  Indtast et navn til dit forum, kan ikke fortrydes.
+                </small>
+              </div>
+              <div class="form-group">
+                <label for="exampleInputPassword1">Beskrivelse af forum</label>
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Kort beskrivelse..."
+                  onChange={(e) => setDescription(e.target.value)}
+                />
+              </div>
+              <button
+                className="btn btn-primary mt-3"
+                onClick={submitCommunity}
+              >
                 Opret forum
               </button>
             </form>

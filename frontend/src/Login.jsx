@@ -87,7 +87,7 @@ export default function Login() {
             </div>
 
             <div className="bottomLogin mb-3">
-              <div className="checkbox align-items-center">
+              <div className="checkbox d-flex align-items-center">
                 <input type="checkbox" name="vehicle1" value="Bike" />
                 <label className="ms-3">Log mig ikke ud.</label>
               </div>
@@ -114,7 +114,7 @@ export default function Login() {
           )}
         </div>
       </div>
-      <Spline scene="https://prod.spline.design/pLKWuaveD95hKu5i/scene.splinecode" />
+      <Spline scene="https://prod.spline.design/oPYLiDyNhuFxiZZc/scene.splinecode" />
     </div>
   );
 }

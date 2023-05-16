@@ -14,14 +14,21 @@
 .profile-section {
   display: flex;
   margin-bottom: 60px;
-  margin-top: 60px;
-  justify-content: space-around;
+  margin-left: 40px;
+  margin-top: 30px;
+  justify-content: flex-start;
 }
 .profile-cover {
   width: 100%;
   object-fit: cover;
   position: relative;
 }
+
+.notFound {
+  flex-direction: column;
+  align-items: center;
+}
+
 .profileCover {
   object-fit: cover;
   height: 200px;
@@ -42,6 +49,7 @@
   display: flex;
   justify-content: center;
   background: white;
+  margin-left: 50px;
 }
 .profile-place {
   display: flex;
@@ -49,9 +57,9 @@
 }
 .profilePic {
   border-radius: 50%;
-  width: 102px;
+  width: 65px;
   object-fit: cover;
-  height: 102px;
+  height: 65px;
 }
 .stats {
   padding: 0px;
@@ -87,5 +95,5 @@
 }
 
 .schoolLogo {
-  max-width: 40px;
+  max-width: 30px;
 }
