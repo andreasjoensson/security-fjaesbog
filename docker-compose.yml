@@ -20,13 +20,3 @@ services:
     build: ./backend/microservices/community
     ports:
       - "8000:8000"
-  frontend:
-    build: ./frontend
-    ports:
-      - "80:80"
-    depends_on:
-      - user
-      - posts
-      - reactions
-      - email
-      - community
