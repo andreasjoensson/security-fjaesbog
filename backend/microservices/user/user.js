@@ -5,7 +5,7 @@ const { UserInputError } = require("apollo-server");
 const checkAuth = require("./auth/checkAuth");
 const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
-const sendPasswordResetEmail = require("./auth/forgotPassword");
+const sendPasswordResetEmail = require("../email/auth/forgotPassword");
 
 module.exports = {
   Query: {
@@ -134,26 +134,6 @@ module.exports = {
         ...user.rows[0],
         token,
       };
-    },
-    async forgotPassword(_, { email }) {
-      const user = await pool.query("SELECT * from users WHERE email = $1", [
-        email,
-      ]);
-
-      if (user.rows.length < 1) {
-        errors.general = "Der er ikke nogen bruger med den e-mail";
-        throw new UserInputError("Der er ikke nogen bruger med den e-mail", {
-          errors,
-        });
-      } else {
-        return await sendPasswordResetEmail.sendPasswordResetEmail(
-          email,
-          user.rows[0].name
-        );
-      }
-    },
-    async resetKode(_, { token, password }) {
-      return await sendPasswordResetEmail.resetPassword(token, password);
     },
   },
 };

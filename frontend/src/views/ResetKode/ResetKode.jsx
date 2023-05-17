@@ -1,56 +1,36 @@
-import "./forgotpassword.css";
 import logo from "../../assets/logo.png";
 import { Lock } from "@material-ui/icons";
 import { useState, useContext } from "react";
-import { gql, useMutation } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import "./ResetKode.css";
 import Spline from "@splinetool/react-spline";
-
-const GLEMT_KODE_QUERY = gql`
-  mutation ResetKode($token: String!, $password: String!) {
-    resetKode(token: $token, password: $password) {
-      user_id
-      name
-      password
-      age
-      school {
-        name
-        logo
-      }
-      email
-      profilepic
-      profilecover
-      token
-      created_at
-      last_login
-    }
-  }
-`;
+import axios from "axios";
 
 export default function ResetKode() {
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const { token } = useParams();
 
-  const [resetKode] = useMutation(GLEMT_KODE_QUERY, {
-    update(_, { data: { resetKode: userData } }) {
-      console.log("user", userData);
-    },
-    onError(err) {
-      setErrors(err.graphQLErrors[0].extensions.errors);
-    },
-  });
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const submitLogin = (e) => {
-    e.preventDefault();
+    if (password !== confirmPassword) {
+      setMessage("Passwords do not match");
+      return;
+    }
 
-    resetKode({
-      variables: {
-        token: token,
-        password: password,
-      },
-    });
+    try {
+      const response = await axios.post(
+        "http://localhost:1040/password/reset",
+        { password, token }
+      );
+      console.log("response", response);
+      setMessage(response.data.message); // assuming the API returns a message
+    } catch (error) {
+      setError(error.response?.data?.error || "An error occurred");
+    }
   };
 
   return (
@@ -66,7 +46,7 @@ export default function ResetKode() {
             <p>Vælg en kode som er svær at bryde.</p>
           </div>
 
-          <form className="loginForm mt-3 " onSubmit={submitLogin}>
+          <form className="loginForm mt-3 " onSubmit={handleSubmit}>
             <label>Ny kode</label>
             <div className="inputIcons">
               <input
@@ -77,18 +57,28 @@ export default function ResetKode() {
               <Lock className="icon" />
             </div>
 
+            <div className="inputIcons mt-3">
+              <input
+                type="password"
+                placeholder="Indtast dit password igen"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <Lock className="icon" />
+            </div>
+
             <button type="submit" className="loginButton">
               Reset kode
             </button>
           </form>
 
-          {Object.keys(errors).length > 0 && (
-            <div className="ui error message">
-              <ul className="list">
-                {Object.values(errors).map((value) => (
-                  <li key={value}>{value}</li>
-                ))}
-              </ul>
+          {message && (
+            <div class="alert alert-primary" role="alert">
+              {message}
+            </div>
+          )}
+          {error && (
+            <div class="alert alert-danger" role="alert">
+              {error}
             </div>
           )}
         </div>

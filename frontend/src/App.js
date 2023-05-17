@@ -10,6 +10,7 @@ import Forum from "./views/Forum/Forum";
 import CreateForum from "./views/CreateForum/CreateForum";
 import Search from "./views/SearchPage/Search";
 import ForgotPassword from "./views/ForgotPassword/ForgotPassword";
+import ResetKode from "./views/ResetKode/ResetKode";
 
 function App() {
   return (
@@ -21,8 +22,8 @@ function App() {
         <Route exact path="/glemtkode">
           <ForgotPassword />
         </Route>
-        <Route exact path="/resetkode/:token">
-          <ForgotPassword />
+        <Route exact path="/reset/:token">
+          <ResetKode />
         </Route>
         <Route exact path="/register">
           <Register />

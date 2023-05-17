@@ -1,40 +1,28 @@
 import "./forgotpassword.css";
 import logo from "../../assets/logo.png";
 import { AccountCircleOutlined, MailOutline } from "@material-ui/icons";
-import { Lock } from "@material-ui/icons";
 import { useState, useContext } from "react";
-import { gql, useMutation } from "@apollo/client";
-import { AuthContext } from "../../context/auth";
-import { useHistory } from "react-router";
 import Spline from "@splinetool/react-spline";
-
-const GLEMT_KODE_QUERY = gql`
-  mutation ForgotPassword($email: String!) {
-    forgotPassword(email: $email)
-  }
-`;
+import axios from "axios";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
-  const [forgotPassword] = useMutation(GLEMT_KODE_QUERY, {
-    update(_, { data: { ForgotPassword: userData } }) {
-      console.log("user", userData);
-    },
-    onError(err) {
-      setErrors(err.graphQLErrors[0].extensions.errors);
-    },
-  });
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const submitLogin = (e) => {
-    e.preventDefault();
-
-    forgotPassword({
-      variables: {
-        email: email,
-      },
-    });
+    try {
+      const response = await axios.post(
+        "http://localhost:1040/password/forgot",
+        { email }
+      );
+      setMessage(response.data.message); // assuming the API returns a message
+    } catch (error) {
+      setError(error.response?.data?.error || "Der er sket en fejl!");
+    }
   };
 
   return (
@@ -50,7 +38,7 @@ export default function ForgotPassword() {
             <p>Bare skriv din e-mail hernede så sender jeg en ny kode ASAP</p>
           </div>
 
-          <form className="loginForm mt-3 " onSubmit={submitLogin}>
+          <form className="loginForm mt-3 " onSubmit={handleSubmit}>
             <label>E-mail</label>
             <div className="inputIcons">
               <input
@@ -70,14 +58,14 @@ export default function ForgotPassword() {
               Har du ikke lavet en konto endnu? Registrer her.
             </a>
           </form>
-
-          {Object.keys(errors).length > 0 && (
-            <div className="ui error message">
-              <ul className="list">
-                {Object.values(errors).map((value) => (
-                  <li key={value}>{value}</li>
-                ))}
-              </ul>
+          {message && (
+            <div class="alert alert-primary" role="alert">
+              {message}
+            </div>
+          )}
+          {error && (
+            <div class="alert alert-danger" role="alert">
+              {error}
             </div>
           )}
         </div>
