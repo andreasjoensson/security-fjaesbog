@@ -1,4 +1,5 @@
 var amqp = require("amqplib/callback_api");
+require("dotenv").config();
 
 function generateUuid() {
   return (
@@ -10,7 +11,7 @@ function generateUuid() {
 
 function getCommunityIdByName(communityName) {
   return new Promise((resolve, reject) => {
-    amqp.connect("amqp://localhost", function (error0, connection) {
+    amqp.connect(process.env.AMQP_URL, function (error0, connection) {
       if (error0) reject(error0);
 
       connection.createChannel(function (error1, channel) {

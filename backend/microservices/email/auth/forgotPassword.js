@@ -1,7 +1,7 @@
 const crypto = require("crypto");
 const pool = require("../database/db");
 const bcrypt = require("bcryptjs");
-const createToken = require("../../user/auth/createToken");
+const createToken = require("./createToken");
 const { MailtrapClient } = require("mailtrap");
 require("dotenv").config();
 

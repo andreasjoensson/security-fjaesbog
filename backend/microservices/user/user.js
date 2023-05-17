@@ -5,7 +5,7 @@ const { UserInputError } = require("apollo-server");
 const checkAuth = require("./auth/checkAuth");
 const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
-const sendPasswordResetEmail = require("../email/auth/forgotPassword");
+require("dotenv").config();
 
 module.exports = {
   Query: {
@@ -74,7 +74,7 @@ module.exports = {
         ]
       );
 
-      amqp.connect("amqp://localhost", (err, conn) => {
+      amqp.connect(process.env.AMQP_URL, (err, conn) => {
         if (err) {
           console.error(err);
           process.exit(1);

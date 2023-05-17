@@ -3,9 +3,10 @@ const {
   addMemberToWelcomeCommunity,
   getCommunityIdByName,
 } = require("../util/addMember");
+require("dotenv").config();
 
 const listenForNewUser = () => {
-  amqp.connect("amqp://localhost", (err, conn) => {
+  amqp.connect(process.env.AMQP_URL, (err, conn) => {
     if (err) {
       console.error(err);
       process.exit(1);
@@ -55,7 +56,7 @@ const listenForNewUser = () => {
 };
 
 const listenForCommunityIdRequest = () => {
-  amqp.connect("amqp://localhost", function (error0, connection) {
+  amqp.connect(process.env.AMQP_URL, function (error0, connection) {
     if (error0) throw error0;
 
     connection.createChannel(function (error1, channel) {

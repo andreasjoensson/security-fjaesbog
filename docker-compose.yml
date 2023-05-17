@@ -1,0 +1,32 @@
+version: "2.4"
+services:
+  user:
+    build: ./backend/microservices/user
+    ports:
+      - "2000:2000"
+  posts:
+    build: ./backend/microservices/posts
+    ports:
+      - "4000:4000"
+  reactions:
+    build: ./backend/microservices/reactions
+    ports:
+      - "5500:5500"
+  email:
+    build: ./backend/microservices/email
+    ports:
+      - "1040:1040"
+  community:
+    build: ./backend/microservices/community
+    ports:
+      - "8000:8000"
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - user
+      - posts
+      - reactions
+      - email
+      - community
