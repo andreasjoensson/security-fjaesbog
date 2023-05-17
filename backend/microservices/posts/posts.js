@@ -1,5 +1,6 @@
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
+const getCommunityByIdName = require("./rabbitmq/service");
 
 module.exports = {
   Query: {
@@ -14,15 +15,18 @@ module.exports = {
       return posts.rows;
     },
     async getCommunityPosts(_, { name }) {
-      const getCommunityID = await pool.query(
-        "SELECT id FROM community WHERE name = $1",
-        [name]
-      );
-      const posts = await pool.query(
-        "SELECT * FROM posts WHERE community_id = $1",
-        [getCommunityID.rows[0].id]
-      );
-      return posts.rows;
+      //kald på anden microservice
+      try {
+        const communityId = await getCommunityByIdName(name);
+        console.log(`Community ID: ${communityId}`);
+        const posts = await pool.query(
+          "SELECT * FROM posts WHERE community_id = $1",
+          [communityId]
+        );
+        return posts.rows;
+      } catch (err) {
+        console.error(err);
+      }
     },
   },
   Mutation: {

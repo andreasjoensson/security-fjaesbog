@@ -1,13 +1,13 @@
 const checkAuth = require("./auth/checkAuth");
-const db = require("./database/db");
+const pool = require("./database/db");
 module.exports = {
   Query: {
     async getCommunity(_, { name }) {
-      const getCommunityQuery = await db.query(
+      const getCommunityQuery = await pool.query(
         "SELECT * FROM community WHERE name = $1",
         [name]
       );
-      const getAmountOfMembers = await db.query(
+      const getAmountOfMembers = await pool.query(
         "SELECT COUNT(*) FROM members WHERE community_id = $1",
         [getCommunityQuery.rows[0].id]
       );
@@ -19,12 +19,49 @@ module.exports = {
     },
     async getCommunitiesByUser(_, {}, context) {
       const user = checkAuth(context);
-      const getCommunityQuery = await db.query(
-        "SELECT * FROM community WHERE creator_id = $1",
-        [user.user_id]
-      );
+      const client = await pool.connect();
+      try {
+        const res = await client.query(
+          `
+          SELECT *
+          FROM community
+          WHERE creator_id = $1
+          UNION
+          SELECT community.*
+          FROM community
+          JOIN members ON community.id = members.community_id
+          WHERE members.users_id = $1
+        `,
+          [user.user_id]
+        );
 
-      return getCommunityQuery.rows || [];
+        return res.rows;
+      } catch (err) {
+        console.error(err);
+        return [];
+      } finally {
+        client.release();
+      }
+    },
+    async getCommunityMembers(_, { name }) {
+      const getCommunityID = await pool.query(
+        "SELECT id FROM community where name = $1",
+        [name]
+      );
+      const members = await pool.query(
+        "SELECT users_id FROM members WHERE community_id = $1",
+        [getCommunityID.rows[0].id]
+      );
+      return members.rows;
+    },
+    async getAll() {
+      const users = await pool.query("SELECT * FROM users");
+      const forums = await pool.query("SELECT * FROM community");
+
+      return {
+        user: users.rows,
+        community: forums.rows,
+      };
     },
   },
   Mutation: {
@@ -33,9 +70,8 @@ module.exports = {
       { name, description, profilepic, coverpic },
       context
     ) {
-      console.log("kører");
       const user = checkAuth(context);
-      const createQuery = await db.query(
+      const createQuery = await pool.query(
         "INSERT INTO community(name, description, created_at, creator_id, profilepic, coverpic)  VALUES($1,$2,$3,$4,$5,$6) RETURNING *",
         [
           name,
@@ -48,5 +84,30 @@ module.exports = {
       );
       return createQuery.rows[0];
     },
+  },
+  async addMember(_, { community_id }, context) {
+    const user = checkAuth(context);
+    const getMembers = await pool.query(
+      "SELECT * FROM members WHERE community_id = $1",
+      [community_id]
+    );
+
+    if (
+      getMembers.rows.filter((row) => row.users_id == user.user_id).length > 0
+    ) {
+      console.log("user is already member, so unfollow member from community");
+      const removeMember = await pool.query(
+        "DELETE FROM members WHERE community_id =$1 AND users_id = $2 RETURNING*",
+        [community_id, user.user_id]
+      );
+      return removeMember.rows[0];
+    }
+
+    const addMember = await pool.query(
+      "INSERT INTO members(community_id, users_id) VALUES($1,$2) RETURNING *",
+      [community_id, user.user_id]
+    );
+
+    return addMember.rows[0];
   },
 };

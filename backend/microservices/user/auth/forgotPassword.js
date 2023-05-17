@@ -22,16 +22,22 @@ async function sendPasswordResetEmail(userEmail) {
     name: "Andreas Moreno",
   };
 
+  const recipients = [
+    {
+      email: userEmail,
+    },
+  ];
+
   client
     .send({
       from: sender,
-      to: userEmail,
+      to: recipients,
       subject: "Password reset",
       text: `Du modtager denne, fordi du (eller nogen andre) har anmodet om at nulstille adgangskoden til din konto.
     Venligst klik på følgende link, eller indsæt det i din browser for at fuldføre processen indenfor en time efter at have modtaget det:
     http://localhost:3000/reset/${token}
     Hvis du ikke anmodede om dette, bedes du ignorere denne e-mail, og din adgangskode vil forblive uændret`,
-      category: "Password",
+      category: "Integration Test",
     })
     .then(console.log, console.error);
 }

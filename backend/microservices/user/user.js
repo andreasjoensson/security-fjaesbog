@@ -7,27 +7,6 @@ const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
 const sendPasswordResetEmail = require("./auth/forgotPassword");
 
-amqp.connect("amqp://localhost", function (error0, connection) {
-  if (error0) {
-    throw error0;
-  }
-  connection.createChannel(function (error1, channel) {
-    if (error1) {
-      throw error1;
-    }
-
-    const queue = "myQueue";
-    const msg = "Hello world";
-
-    channel.assertQueue(queue, {
-      durable: false,
-    });
-    channel.sendToQueue(queue, Buffer.from(msg));
-
-    console.log(" [x] Sent %s", msg);
-  });
-});
-
 module.exports = {
   Query: {
     async getProfile(_, { name }) {
@@ -43,26 +22,6 @@ module.exports = {
       return {
         ...user.rows[0],
         school,
-      };
-    },
-    async getCommunityMembers(_, { name }) {
-      const getCommunityID = await pool.query(
-        "SELECT id FROM community where name = $1",
-        [name]
-      );
-      const members = await pool.query(
-        "SELECT users_id FROM members WHERE community_id = $1",
-        [getCommunityID.rows[0].id]
-      );
-      return members.rows;
-    },
-    async getAll() {
-      const users = await pool.query("SELECT * FROM users");
-      const forums = await pool.query("SELECT * FROM community");
-
-      return {
-        user: users.rows,
-        community: forums.rows,
       };
     },
   },
@@ -115,42 +74,38 @@ module.exports = {
         ]
       );
 
-      console.log("users", res);
+      amqp.connect("amqp://localhost", (err, conn) => {
+        if (err) {
+          console.error(err);
+          process.exit(1);
+        }
 
-      console.log("res", res.rows[0]);
+        conn.createChannel((err, ch) => {
+          if (err) {
+            console.error(err);
+            process.exit(1);
+          }
+
+          const exchange = "user.events";
+          const msg = JSON.stringify({
+            type: "USER_CREATED",
+            payload: { id: res.rows[0].id }, // Replace with actual user ID
+          });
+
+          ch.assertExchange(exchange, "fanout", { durable: false });
+          ch.publish(exchange, "", Buffer.from(msg));
+          console.log(" [x] Sent %s", msg);
+
+          // Close the channel and the connection
+          ch.close(() => conn.close());
+        });
+      });
+
       const token = createToken(res.rows[0]);
-      console.log("token", token);
       return {
         ...res.rows[0],
         token,
       };
-    },
-    async addMember(_, { community_id }, context) {
-      const user = checkAuth(context);
-      const getMembers = await pool.query(
-        "SELECT * FROM members WHERE community_id = $1",
-        [community_id]
-      );
-
-      if (
-        getMembers.rows.filter((row) => row.users_id == user.user_id).length > 0
-      ) {
-        console.log(
-          "user is already member, so unfollow member from community"
-        );
-        const removeMember = await pool.query(
-          "DELETE FROM members WHERE community_id =$1 AND users_id = $2 RETURNING*",
-          [community_id, user.user_id]
-        );
-        return removeMember.rows[0];
-      }
-
-      const addMember = await pool.query(
-        "INSERT INTO members(community_id, users_id) VALUES($1,$2) RETURNING *",
-        [community_id, user.user_id]
-      );
-
-      return addMember.rows[0];
     },
     async login(_, { name, password }) {
       const { errors, valid } = validateLoginInput(name, password);
