@@ -3,7 +3,11 @@ const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./schema");
 const resolvers = require("./community");
 const { buildFederatedSchema } = require("@apollo/federation");
-const { listenForCommunityIdRequest, listenForNewUser } = require("./rabbitmq");
+const {
+  listenForCommunityIdRequest,
+  listenForNewUser,
+  listenForCommunityPostCount,
+} = require("./rabbitmq");
 
 (async () => {
   const server = new ApolloServer({
@@ -19,7 +23,7 @@ const { listenForCommunityIdRequest, listenForNewUser } = require("./rabbitmq");
   const app = express();
   server.applyMiddleware({ app });
 
-  const PORT = process.env.PORT || 8000;
+  const PORT = 8000;
 
   app.listen({ port: PORT }, () => rabbitMqListeners());
 })();
@@ -27,4 +31,5 @@ const { listenForCommunityIdRequest, listenForNewUser } = require("./rabbitmq");
 const rabbitMqListeners = async () => {
   listenForCommunityIdRequest();
   listenForNewUser();
+  listenForCommunityPostCount();
 };

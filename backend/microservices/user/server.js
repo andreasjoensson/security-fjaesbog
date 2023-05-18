@@ -3,6 +3,10 @@ const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./schema");
 const resolvers = require("./user");
 const { buildFederatedSchema } = require("@apollo/federation");
+const {
+  listenForUsersRequest,
+  listenForUserListRequest,
+} = require("./rabbitMq");
 
 (async () => {
   const server = new ApolloServer({
@@ -20,9 +24,10 @@ const { buildFederatedSchema } = require("@apollo/federation");
 
   const PORT = process.env.PORT || 2000;
 
-  app.listen({ port: PORT }, () =>
-    console.log(
-      `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
-    )
-  );
+  app.listen({ port: PORT }, () => listenForRabbitMQ());
 })();
+
+const listenForRabbitMQ = async () => {
+  listenForUsersRequest();
+  listenForUserListRequest();
+};

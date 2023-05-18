@@ -5,6 +5,7 @@ const { UserInputError } = require("apollo-server");
 const checkAuth = require("./auth/checkAuth");
 const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
+const { newUserCreatedMessage } = require("./rabbitMq");
 require("dotenv").config();
 
 module.exports = {
@@ -87,32 +88,7 @@ module.exports = {
         ]
       );
 
-      amqp.connect(process.env.AMQP_URL, (err, conn) => {
-        if (err) {
-          console.error(err);
-          process.exit(1);
-        }
-
-        conn.createChannel((err, ch) => {
-          if (err) {
-            console.error(err);
-            process.exit(1);
-          }
-
-          const exchange = "user.events";
-          const msg = JSON.stringify({
-            type: "USER_CREATED",
-            payload: { id: res.rows[0].id }, // Replace with actual user ID
-          });
-
-          ch.assertExchange(exchange, "fanout", { durable: false });
-          ch.publish(exchange, "", Buffer.from(msg));
-          console.log(" [x] Sent %s", msg);
-
-          // Close the channel and the connection
-          ch.close(() => conn.close());
-        });
-      });
+      newUserCreatedMessage();
 
       const token = createToken(res.rows[0]);
       return {

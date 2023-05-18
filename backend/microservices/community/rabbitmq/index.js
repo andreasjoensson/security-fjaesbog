@@ -3,6 +3,8 @@ const {
   addMemberToWelcomeCommunity,
   getCommunityIdByName,
 } = require("../util/addMember");
+const { addPostsCountToCommunity } = require("../util/addCommunityCount");
+
 require("dotenv").config();
 
 const listenForNewUser = () => {
@@ -55,6 +57,88 @@ const listenForNewUser = () => {
   });
 };
 
+async function getUsers() {
+  return new Promise((resolve, reject) => {
+    amqp.connect(process.env.AMQP_URL, function (error0, connection) {
+      if (error0) {
+        console.error(
+          "Fejl ved oprettelse af forbindelse til RabbitMQ:",
+          error0
+        );
+        reject(error0);
+        return;
+      }
+
+      connection.createChannel(function (error1, channel) {
+        if (error1) {
+          console.error("Fejl ved oprettelse af RabbitMQ-kanal:", error1);
+          reject(error1);
+          return;
+        }
+
+        const requestQueue = "getUserListRequestQueue";
+        const responseQueue = "getUserListResponseQueue";
+
+        channel.assertQueue(requestQueue, { durable: true });
+        channel.assertQueue(responseQueue, { durable: true });
+
+        console.log("Sending user list request");
+
+        const correlationId = generateUuid();
+
+        channel.consume(
+          responseQueue,
+          function (message) {
+            if (message.properties.correlationId === correlationId) {
+              const userList = JSON.parse(message.content.toString());
+              console.log("Received user list:", userList);
+              resolve(userList);
+            }
+          },
+          { noAck: true }
+        );
+
+        channel.sendToQueue(requestQueue, Buffer.from(""), {
+          correlationId: correlationId,
+          replyTo: responseQueue,
+        });
+      });
+    });
+  });
+}
+
+function listenForCommunityPostCount() {
+  amqp.connect(process.env.AMQP_URL, function (error0, connection) {
+    if (error0) {
+      console.error("Fejl ved oprettelse af forbindelse til RabbitMQ:", error0);
+      return;
+    }
+
+    connection.createChannel(function (error1, channel) {
+      if (error1) {
+        console.error("Fejl ved oprettelse af RabbitMQ-kanal:", error1);
+        return;
+      }
+
+      const queueName = "createPostQueue";
+
+      channel.assertQueue(queueName, { durable: true });
+
+      console.log("Listening for new posts");
+
+      channel.consume(queueName, function (message) {
+        const { communityId, postId } = JSON.parse(message.content.toString());
+        console.log(
+          `New post notification received: communityId=${communityId}, postId=${postId}`
+        );
+        addPostsCountToCommunity(communityId);
+        channel.ack(message);
+        // Implement any other logic based on the received postId and communityId
+      });
+    });
+  });
+}
+
 const listenForCommunityIdRequest = () => {
   amqp.connect(process.env.AMQP_URL, function (error0, connection) {
     if (error0) throw error0;
@@ -93,4 +177,17 @@ const listenForCommunityIdRequest = () => {
   });
 };
 
-module.exports = { listenForCommunityIdRequest, listenForNewUser };
+function generateUuid() {
+  return (
+    Math.random().toString() +
+    Math.random().toString() +
+    Math.random().toString()
+  );
+}
+
+module.exports = {
+  listenForCommunityIdRequest,
+  listenForNewUser,
+  listenForCommunityPostCount,
+  getUsers,
+};

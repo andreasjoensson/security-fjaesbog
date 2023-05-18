@@ -10,6 +10,7 @@ IF "%type%" EQU "" (
     set command=npm start
 )
 
+start cmd /k "cd microservices/email && npm start && exit"
 start cmd /k "cd microservices/community && npm start && exit" 
 start cmd /k "cd microservices/posts && npm start && exit"
 start cmd /k "cd microservices/reactions && npm start && exit"

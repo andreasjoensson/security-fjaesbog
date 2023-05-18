@@ -9,7 +9,32 @@ function generateUuid() {
   );
 }
 
-function getCommunityIdByName(communityName) {
+function createPostMessage(communityId, postId) {
+  amqp.connect(process.env.AMQP_URL, function (error0, connection) {
+    if (error0) {
+      console.error("Fejl ved oprettelse af forbindelse til RabbitMQ:", error0);
+      return;
+    }
+
+    connection.createChannel(function (error1, channel) {
+      if (error1) {
+        console.error("Fejl ved oprettelse af RabbitMQ-kanal:", error1);
+        return;
+      }
+
+      const queueName = "createPostQueue";
+
+      channel.assertQueue(queueName, { durable: true });
+
+      console.log("Creating new post");
+
+      const message = JSON.stringify({ communityId, postId });
+      channel.sendToQueue(queueName, Buffer.from(message));
+    });
+  });
+}
+
+function getCommunityByIdName(communityName) {
   return new Promise((resolve, reject) => {
     amqp.connect(process.env.AMQP_URL, function (error0, connection) {
       if (error0) reject(error0);
@@ -49,4 +74,4 @@ function getCommunityIdByName(communityName) {
   });
 }
 
-module.exports = getCommunityIdByName;
+module.exports = { getCommunityByIdName, createPostMessage };

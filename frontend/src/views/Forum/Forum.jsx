@@ -43,10 +43,10 @@ export default function Forum() {
   `;
 
   const JOIN_COMMUNITY_MUTATION = gql`
-    mutation addMember($community_id: ID!) {
-      addMember(community_id: $community_id) {
-        users_id
+    mutation Mutation($communityId: ID!) {
+      addMember(community_id: $communityId) {
         community_id
+        users_id
       }
     }
   `;
@@ -62,9 +62,9 @@ export default function Forum() {
   });
 
   useEffect(() => {
-    console.log("Loading:", loading);
-    console.log("Data:", data);
-    console.log("Error:", error);
+    console.log("data", data);
+    console.log("error", error);
+    console.log("loading", loading);
     setAlreadyMember(
       data?.getCommunityMembers.filter(
         (member) => member.users_id == user.user_id
@@ -99,7 +99,7 @@ export default function Forum() {
                     onClick={() =>
                       joinCommunity({
                         variables: {
-                          community_id: data?.getCommunity.id,
+                          communityId: data?.getCommunity.id,
                         },
                       })
                     }
@@ -112,7 +112,7 @@ export default function Forum() {
                     onClick={() =>
                       joinCommunity({
                         variables: {
-                          community_id: data?.getCommunity.id,
+                          communityId: data?.getCommunity.id,
                         },
                       })
                     }
