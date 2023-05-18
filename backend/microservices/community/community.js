@@ -36,6 +36,8 @@ module.exports = {
           [user.user_id]
         );
 
+        console.log("res", res);
+
         return res.rows;
       } catch (err) {
         console.error(err);

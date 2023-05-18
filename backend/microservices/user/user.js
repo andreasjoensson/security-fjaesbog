@@ -6,32 +6,38 @@ const checkAuth = require("./auth/checkAuth");
 const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
 const { newUserCreatedMessage } = require("./rabbitMq");
+const cacheMiddleware = require("../../cache/cacheMiddleware");
 require("dotenv").config();
 
 module.exports = {
   Query: {
-    async getProfile(_, { name }) {
+    getProfile: cacheMiddleware(async (_, { name }) => {
       const activeUser = await pool.query(
         "SELECT * FROM users WHERE name = $1 AND deleted_at IS NULL",
         [name]
       );
 
+      console.log("activeUser", activeUser);
+
       if (!activeUser) {
         return {
           error: "Bruger ikke fundet",
         };
+        console.log("oh nooo");
       }
+
       const schoolQuery = await pool.query("SELECT * FROM school WHERE id=$1", [
-        user.rows[0].school,
+        activeUser.rows[0].school,
       ]);
+      console.log("oh dsanooo");
 
       let school = schoolQuery.rows[0];
 
       return {
-        ...user.rows[0],
+        ...activeUser.rows[0],
         school,
       };
-    },
+    }),
   },
   Mutation: {
     async deleteUser(_, { user_id }) {
