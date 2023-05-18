@@ -2,7 +2,6 @@ const cacheMiddleware = require("../../cache/cacheMiddleware");
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const { getUsers } = require("./rabbitmq");
-cacheMiddleware;
 
 module.exports = {
   Query: {
