@@ -10,9 +10,16 @@ require("dotenv").config();
 module.exports = {
   Query: {
     async getProfile(_, { name }) {
-      const user = await pool.query("SELECT * FROM users WHERE name=$1", [
-        name,
-      ]);
+      const activeUser = await pool.query(
+        "SELECT * FROM users WHERE name = $1 AND deleted_at IS NULL",
+        [name]
+      );
+
+      if (!activeUser) {
+        return {
+          error: "Bruger ikke fundet",
+        };
+      }
       const schoolQuery = await pool.query("SELECT * FROM school WHERE id=$1", [
         user.rows[0].school,
       ]);
@@ -26,6 +33,12 @@ module.exports = {
     },
   },
   Mutation: {
+    async deleteUser(_, { user_id }) {
+      await pool.query(
+        "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1",
+        [user_id]
+      );
+    },
     async createUser(
       _,
       {
