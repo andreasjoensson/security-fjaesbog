@@ -4,20 +4,21 @@ const {
 } = require("./rabbitmq/service");
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
+const cacheMiddleware = require("../../cache/cacheMiddleware");
 
 module.exports = {
   Query: {
-    async getPosts(_) {
+    getPosts: cacheMiddleware(async (_) => {
       let res = await pool.query("SELECT * FROM posts");
       return res.rows;
-    },
-    async getPostsFromUser(_, { name }) {
+    }),
+    getPostsFromUser: cacheMiddleware(async (_, { name }) => {
       let posts = await pool.query("SELECT * FROM posts WHERE name = $1", [
         name,
       ]);
       return posts.rows;
-    },
-    async getCommunityPosts(_, { name }) {
+    }),
+    getCommunityPosts: cacheMiddleware(async (_, { name }) => {
       //kald på anden microservice
       try {
         const communityId = await getCommunityByIdName(name);
@@ -30,7 +31,7 @@ module.exports = {
       } catch (err) {
         console.error(err);
       }
-    },
+    }),
   },
   Mutation: {
     async createPost(_, { title, text, image, community_id }, context) {

@@ -1,9 +1,12 @@
+const cacheMiddleware = require("../../cache/cacheMiddleware");
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const { getUsers } = require("./rabbitmq");
+cacheMiddleware;
+
 module.exports = {
   Query: {
-    async getCommunity(_, { name }) {
+    getCommunity: cacheMiddleware(async (_, { name }) => {
       const getCommunityQuery = await pool.query(
         "SELECT * FROM community WHERE name = $1",
         [name]
@@ -17,8 +20,8 @@ module.exports = {
         ...getCommunityQuery.rows[0],
         members: getAmountOfMembers.rows[0].count,
       };
-    },
-    async getCommunitiesByUser(_, {}, context) {
+    }),
+    getCommunitiesByUser: cacheMiddleware(async (_, {}, context) => {
       const user = checkAuth(context);
       const client = await pool.connect();
       try {
@@ -45,8 +48,8 @@ module.exports = {
       } finally {
         client.release();
       }
-    },
-    async getCommunityMembers(_, { name }) {
+    }),
+    getCommunityMembers: cacheMiddleware(async (_, { name }) => {
       const getCommunityID = await pool.query(
         "SELECT id FROM community where name = $1",
         [name]
@@ -56,8 +59,8 @@ module.exports = {
         [getCommunityID.rows[0].id]
       );
       return members.rows;
-    },
-    async getAll() {
+    }),
+    getAll: cacheMiddleware(async () => {
       const users = await getUsers();
       const forums = await pool.query("SELECT * FROM community");
 
@@ -67,7 +70,7 @@ module.exports = {
         user: users,
         community: forums.rows,
       };
-    },
+    }),
   },
   Mutation: {
     async createCommunity(
