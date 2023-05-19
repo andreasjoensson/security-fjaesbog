@@ -19,7 +19,7 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set active Azure subscription
-        run: az account set --subscription dbc05e4a-2373-4001-9073-9ae3101c3a89
+        run: az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: Docker Login
         run: echo "${{ secrets.REGISTRY_PASSWORD }}" | docker login fjaesbog.azurecr.io -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
