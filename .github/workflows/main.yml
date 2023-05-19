@@ -21,42 +21,42 @@ jobs:
       - name: Build and push Docker image for community service
         uses: docker/build-push-action@v2
         with:
-          context: ./microservices/community
+          context: ./backend/microservices/community
           push: true
           tags: fjaesbog.azurecr.io/community:${{ github.sha }}
 
       - name: Build and push Docker image for email service
         uses: docker/build-push-action@v2
         with:
-          context: ./microservices/email
+          context: ./backend/microservices/email
           push: true
           tags: fjaesbog.azurecr.io/email:${{ github.sha }}
 
       - name: Build and push Docker image for posts service
         uses: docker/build-push-action@v2
         with:
-          context: ./microservices/posts
+          context: ./backend/microservices/posts
           push: true
           tags: fjaesbog.azurecr.io/posts:${{ github.sha }}
 
       - name: Build and push Docker image for reactions service
         uses: docker/build-push-action@v2
         with:
-          context: ./microservices/reactions
+          context: ./backend/microservices/reactions
           push: true
           tags: fjaesbog.azurecr.io/reactions:${{ github.sha }}
 
       - name: Build and push Docker image for user service
         uses: docker/build-push-action@v2
         with:
-          context: ./microservices/user
+          context: ./backend/microservices/user
           push: true
           tags: fjaesbog.azurecr.io/user:${{ github.sha }}
 
       - name: Build and push Docker image for gateway service
         uses: docker/build-push-action@v2
         with:
-          context: ./microservices/gateway
+          context: ./backend/microservices/gateway
           push: true
           tags: fjaesbog.azurecr.io/gateway:${{ github.sha }}
 
