@@ -1,6 +1,6 @@
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
-const cacheMiddleware = require("../../cache/cacheMiddleware");
+const cacheMiddleware = require("./cache/cacheMiddleware");
 
 module.exports = {
   Query: {

@@ -6,7 +6,7 @@ const checkAuth = require("./auth/checkAuth");
 const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
 const { newUserCreatedMessage } = require("./rabbitMq");
-const cacheMiddleware = require("../../cache/cacheMiddleware");
+const cacheMiddleware = require("./cache/cacheMiddleware");
 require("dotenv").config();
 
 module.exports = {
