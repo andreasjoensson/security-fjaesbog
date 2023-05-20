@@ -63,13 +63,21 @@ jobs:
           push: true
           tags: fjaesbog.azurecr.io/gateway:${{ github.sha }}
 
+      # Assuming you have same steps for building and pushing docker images
+
+      - name: Get subscription id
+        id: account
+        uses: azure/CLI@v1
+        with:
+          azcliversion: "latest"
+          inlineScript: echo "::set-output name=subscription::$(az account show --query id --output tsv)"
+
       - name: Set up Azure CLI
         uses: azure/CLI@v1
         with:
-          azcliversion: 2.0.72
+          azcliversion: "latest"
           inlineScript: |
-            az account show
-            az account set --subscription $(az account show --query id --output tsv)
+            az account set --subscription ${{ steps.account.outputs.subscription }}
             az webapp config container set --name community --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/community:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
             az webapp config container set --name email --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/email:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
             az webapp config container set --name posts --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/posts:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
