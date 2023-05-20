@@ -68,6 +68,7 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
+            az account show
             az account set --subscription $(az account show --query id --output tsv)
             az webapp config container set --name community --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/community:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
             az webapp config container set --name email --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/email:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
