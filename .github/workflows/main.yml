@@ -84,7 +84,7 @@ jobs:
             az webapp config container set --name fjaesbog-reactions --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/reactions:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
             az webapp config container set --name fjaesbog-user --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/user:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
             az webapp config container set --name fjaesbog-gateway --resource-group fjaesbog --docker-custom-image-name fjaesbog.azurecr.io/gateway:${{ github.sha }} --docker-registry-server-url https://fjaesbog.azurecr.io --docker-registry-server-user ${{ secrets.REGISTRY_USERNAME }} --docker-registry-server-password ${{ secrets.REGISTRY_PASSWORD }}
-            az webapp config appsettings set --resource-group fjaesbog --name fjaesbog-community --settings WEBSITES_PORT=3000
+            az webapp config appsettings set --resource-group fjaesbog --name fjaesbog-community --settings WEBSITES_PORT=1000
             az webapp config appsettings set --resource-group fjaesbog --name fjaesbog-user --settings WEBSITES_PORT=2000
             az webapp config appsettings set --resource-group fjaesbog --name fjaesbog-posts --settings WEBSITES_PORT=4000
             az webapp config appsettings set --resource-group fjaesbog --name fjaesbog-reactions --settings WEBSITES_PORT=5500

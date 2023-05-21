@@ -23,7 +23,7 @@ const {
   const app = express();
   server.applyMiddleware({ app });
 
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 1000;
 
   app.listen({ port: PORT }, () => rabbitMqListeners());
 })();

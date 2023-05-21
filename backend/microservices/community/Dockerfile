@@ -1,20 +1,20 @@
-# Use an official Node.js runtime as a parent image
+# Use an official Node.js runtime as the base image
 FROM node:14
 
-# Set the working directory to /
+# Set the working directory in the container to /app
 WORKDIR /app
 
-# Copy package.json and package-lock.json into the working directory
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install any needed packages
+# Install the service's dependencies in the container
 RUN npm install
 
-# Copy the rest of the application code
+# Copy the rest of your service's code to the working directory
 COPY . .
 
-# Make port 3000 (or the port your service uses) available to the world outside this container
-EXPOSE 3000
+# Expose the port that your service listens on
+EXPOSE 1000
 
-# Run the app when the container launches
-CMD ["npm", "start"]
+# Define the command to run your service
+CMD [ "npm", "start" ]
