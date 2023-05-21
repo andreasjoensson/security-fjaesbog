@@ -13,8 +13,8 @@ RUN npm install
 # Copy the rest of the application code
 COPY . .
 
-# Make port 8000 (or the port your service uses) available to the world outside this container
-EXPOSE 8000
+# Make port 3000 (or the port your service uses) available to the world outside this container
+EXPOSE 3000
 
 # Run the app when the container launches
 CMD ["npm", "start"]
