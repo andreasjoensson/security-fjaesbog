@@ -84,7 +84,7 @@ export default function Profile() {
           <img
             src={
               userProfileData?.getProfile.profilecover
-                ? userProfileData?.getProfile.profilecover
+                ? encodeURIComponent(userProfileData?.getProfile.profilecover)
                 : "https://kea.dk/slir/w585-c100x50/images/DA/Om-KEA/KEA_Okt_17_136_Hi-Res.jpg"
             }
             className="profileCover"
@@ -97,7 +97,7 @@ export default function Profile() {
               <img
                 src={
                   userProfileData.getProfile.profilepic
-                    ? userProfileData.getProfile.profilepic
+                    ? encodeURIComponent(userProfileData.getProfile.profilepic)
                     : "https://www.mico.dk/wp-content/uploads/2020/05/blank-profile-picture-973460_1280.png"
                 }
                 className="profilePic me-3"
