@@ -5,11 +5,11 @@ const {
 } = require("../auth/forgotPassword");
 const pool = require("../database/db");
 var router = express.Router();
-const { sanitize } = require("validator");
+const xss = require("xss");
 
 router.post("/forgot", async function (req, res, next) {
   const { email } = req.body;
-  const sanitizedInput = sanitize(email).trim();
+  const sanitizedInput = xss(email).trim();
 
   const user = await pool.query("SELECT * from users WHERE email = $1", [
     sanitizedInput,
@@ -27,8 +27,8 @@ router.post("/forgot", async function (req, res, next) {
 router.post("/reset", async (req, res, next) => {
   const { token, password } = req.body;
 
-  const sanitizedToken = sanitize(token).trim();
-  const sanitizedPassword = sanitize(password).trim();
+  const sanitizedToken = xss(token).trim();
+  const sanitizedPassword = xss(password).trim();
 
   try {
     await resetPassword(sanitizedToken, sanitizedPassword);

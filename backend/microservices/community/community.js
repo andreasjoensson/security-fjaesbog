@@ -2,12 +2,12 @@ const cacheMiddleware = require("./cache/cacheMiddleware");
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const { getUsers } = require("./rabbitmq");
-const { sanitize } = require("validator");
+const xss = require("xss");
 
 module.exports = {
   Query: {
     getCommunity: cacheMiddleware(async (_, { name }) => {
-      const sanitizedInput = sanitize(name).trim();
+      const sanitizedInput = xss(name).trim();
 
       const getCommunityQuery = await pool.query(
         "SELECT * FROM community WHERE name = $1",
@@ -52,7 +52,7 @@ module.exports = {
       }
     }),
     getCommunityMembers: cacheMiddleware(async (_, { name }) => {
-      const sanitizedInput = sanitize(name).trim();
+      const sanitizedInput = xss(name).trim();
 
       const getCommunityID = await pool.query(
         "SELECT id FROM community where name = $1",
@@ -82,10 +82,10 @@ module.exports = {
       { name, description, profilepic, coverpic },
       context
     ) {
-      const sanitizedName = sanitize(name).trim();
-      const sanitizedDescription = sanitize(description).trim();
-      const sanitizedProfilePic = sanitize(profilepic).trim();
-      const sanitizedCoverPic = sanitize(coverpic).trim();
+      const sanitizedName = xss(name).trim();
+      const sanitizedDescription = xss(description).trim();
+      const sanitizedProfilePic = xss(profilepic).trim();
+      const sanitizedCoverPic = xss(coverpic).trim();
 
       const user = checkAuth(context);
       const createQuery = await pool.query(
@@ -102,7 +102,7 @@ module.exports = {
       return createQuery.rows[0];
     },
     async addMember(_, { community_id }, context) {
-      const sanitizedCommunityId = sanitize(community_id).trim();
+      const sanitizedCommunityId = xss(community_id).trim();
 
       const user = checkAuth(context);
       console.log("tilføjer nu member");

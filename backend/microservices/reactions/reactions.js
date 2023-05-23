@@ -1,12 +1,12 @@
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const cacheMiddleware = require("./cache/cacheMiddleware");
-const { sanitize } = require("validator");
+const xss = require("xss");
 
 module.exports = {
   Query: {
     getLikes: cacheMiddleware(async (_, { post_id }) => {
-      const sanitized_post_id = sanitize(post_id).trim();
+      const sanitized_post_id = xss(post_id).trim();
 
       let likeCount = await pool.query(
         "SELECT (SELECT COUNT(*) FROM likes WHERE positive = true AND post_id = $1) - (SELECT COUNT(*) FROM dislikes WHERE positive = false AND post_id = $1) AS DEEZ",
@@ -27,7 +27,7 @@ module.exports = {
       };
     }),
     getCommentLikes: cacheMiddleware(async (_, { comment_id }) => {
-      const sanitized_comment_id = sanitize(comment_id).trim();
+      const sanitized_comment_id = xss(comment_id).trim();
 
       let likeCount = await pool.query(
         "SELECT (SELECT COUNT(*) FROM commentlikes WHERE comment_id = $1) - (SELECT COUNT(*) FROM commentdislikes WHERE comment_id = $1) AS DEEZ",
@@ -49,7 +49,7 @@ module.exports = {
       };
     }),
     getComments: cacheMiddleware(async (_, { post_id }) => {
-      const sanitized_post_id = sanitize(post_id).trim();
+      const sanitized_post_id = xss(post_id).trim();
 
       const getCommentsQuery = await pool.query(
         "SELECT * FROM comments WHERE post_id = $1",
@@ -60,8 +60,8 @@ module.exports = {
   },
   Mutation: {
     async createComment(_, { post_id, text }, context) {
-      const sanitized_post_id = sanitize(post_id).trim();
-      const sanitized_text = sanitize(text).trim();
+      const sanitized_post_id = xss(post_id).trim();
+      const sanitized_text = xss(text).trim();
 
       const user = checkAuth(context);
       const writeCommentQuery = await pool.query(
@@ -78,7 +78,7 @@ module.exports = {
       return writeCommentQuery.rows[0];
     },
     async deleteComment(_, { comment_id }) {
-      const sanitized_comment_id = sanitize(comment_id).trim();
+      const sanitized_comment_id = xss(comment_id).trim();
 
       const deleteQuery = await pool.query(
         "DELETE FROM comments WHERE id = $1 RETURNING *",
@@ -87,8 +87,8 @@ module.exports = {
       return deleteQuery.rows[0];
     },
     async likePost(_, { user_id, post_id }) {
-      const sanitized_user_id = sanitize(user_id).trim();
-      const sanitized_post_id = sanitize(post_id).trim();
+      const sanitized_user_id = xss(user_id).trim();
+      const sanitized_post_id = xss(post_id).trim();
 
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM likes WHERE post_id = $1",
@@ -146,8 +146,8 @@ module.exports = {
       }
     },
     async likeComment(_, { user_id, comment_id }) {
-      const sanitized_user_id = sanitize(user_id).trim();
-      const sanitized_comment_id = sanitize(comment_id).trim();
+      const sanitized_user_id = xss(user_id).trim();
+      const sanitized_comment_id = xss(comment_id).trim();
 
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM commentlikes WHERE comment_id = $1",
@@ -204,8 +204,8 @@ module.exports = {
       }
     },
     async dislikePost(_, { post_id, user_id }) {
-      const sanitized_user_id = sanitize(user_id).trim();
-      const sanitized_post_id = sanitize(post_id).trim();
+      const sanitized_user_id = xss(user_id).trim();
+      const sanitized_post_id = xss(post_id).trim();
 
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM likes WHERE post_id = $1",
@@ -262,8 +262,8 @@ module.exports = {
       }
     },
     async dislikeComment(_, { comment_id, user_id }) {
-      const sanitized_user_id = sanitize(user_id).trim();
-      const sanitized_comment_id = sanitize(comment_id).trim();
+      const sanitized_user_id = xss(user_id).trim();
+      const sanitized_comment_id = xss(comment_id).trim();
 
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM commentlikes WHERE comment_id = $1",

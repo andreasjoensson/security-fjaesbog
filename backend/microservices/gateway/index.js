@@ -1,5 +1,8 @@
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer } = require("apollo-server-express");
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
+const express = require("express");
+const helmet = require("helmet");
+const cors = require("cors");
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   async willSendRequest({ request, context }) {
@@ -12,21 +15,46 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 
 const gateway = new ApolloGateway({
   serviceList: [
-    { name: "posts", url: "https://fjaesbog-posts.azurewebsites.net/graphql" },
+    { name: "posts", url: "http://localhost:4000/graphql" },
     {
       name: "community",
-      url: "https://fjaesbog-community.azurewebsites.net/graphql",
+      url: "http://localhost:1000/graphql",
     },
-    { name: "users", url: "https://fjaesbog-users.azurewebsites.net/graphql" },
+    { name: "users", url: "http://localhost:2000/graphql" },
     {
       name: "reactions",
-      url: "https://fjaesbog-reactions.azurewebsites.net/graphql",
+      url: "http://localhost:5500/graphql",
     },
   ],
   buildService({ name, url }) {
     return new AuthenticatedDataSource({ url });
   },
 });
+
+const app = express();
+
+// Apply helmet middleware with CSP configuration
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'"],
+      imgSrc: [
+        "'self'",
+        "https://kea.dk/slir/w585-c100x50/images/DA/Om-KEA/KEA_Okt_17_136_Hi-Res.jpg",
+        "https://www.mico.dk/wp-content/uploads/2020/05/blank-profile-picture-973460_1280.png",
+      ],
+      // Add other CSP directives as needed
+    },
+  })
+);
+
+// Configure CORS
+const corsOptions = {
+  origin: ["http://example.com", "http://localhost:3000"], // Replace with your allowed origins
+};
+app.use(cors(corsOptions));
 
 const server = new ApolloServer({
   gateway,
@@ -37,6 +65,15 @@ const server = new ApolloServer({
   },
 });
 
-server.listen({ port: 9000 }).then(({ url }) => {
-  console.log(`🚀 Gateway ready at ${url}`);
+async function startApolloServer() {
+  await server.start();
+  server.applyMiddleware({ app });
+}
+
+startApolloServer().then(() => {
+  app.listen({ port: 9000 }, () => {
+    console.log(
+      `🚀 Gateway ready at http://localhost:9000${server.graphqlPath}`
+    );
+  });
 });

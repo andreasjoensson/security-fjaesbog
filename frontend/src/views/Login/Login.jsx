@@ -38,6 +38,7 @@ export default function Login() {
       history.push("/dashboard");
     },
     onError(err) {
+      console.log("err", err);
       setErrors(err.graphQLErrors[0].extensions.errors);
     },
   });

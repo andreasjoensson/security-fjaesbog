@@ -5,7 +5,7 @@ const {
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const cacheMiddleware = require("./cache/cacheMiddleware");
-const { sanitize } = require("validator");
+const xss = require("xss");
 
 module.exports = {
   Query: {
@@ -14,7 +14,7 @@ module.exports = {
       return res.rows;
     }),
     getPostsFromUser: cacheMiddleware(async (_, { name }) => {
-      const sanitizedInput = sanitize(name).trim();
+      const sanitizedInput = xss(name).trim();
 
       let posts = await pool.query("SELECT * FROM posts WHERE name = $1", [
         sanitizedInput,
@@ -22,7 +22,7 @@ module.exports = {
       return posts.rows;
     }),
     getCommunityPosts: cacheMiddleware(async (_, { name }) => {
-      const sanitizedInput = sanitize(name).trim();
+      const sanitizedInput = xss(name).trim();
 
       //kald på anden microservice
       try {
@@ -43,10 +43,10 @@ module.exports = {
       const user = checkAuth(context);
       const client = await pool.connect();
 
-      const sanitizeTitle = sanitize(title).trim();
-      const sanitizeText = sanitize(text).trim();
-      const sanitizeImage = sanitize(image).trim();
-      const sanitizeCommunityId = sanitize(community_id).trim();
+      const sanitizeTitle = xss(title).trim();
+      const sanitizeText = xss(text).trim();
+      const sanitizeImage = xss(image).trim();
+      const sanitizeCommunityId = xss(community_id).trim();
 
       try {
         await client.query("BEGIN"); // Start transaction
@@ -82,7 +82,7 @@ module.exports = {
       }
     },
     async deletePost(_, { post_id }) {
-      const sanitizedInput = sanitize(post_id).trim();
+      const sanitizedInput = xss(post_id).trim();
 
       const post = await pool.query(
         "DELETE FROM posts WHERE post_id = $1 RETURNING*",

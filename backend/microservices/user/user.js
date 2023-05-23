@@ -7,13 +7,13 @@ const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
 const { newUserCreatedMessage } = require("./rabbitMq");
 const cacheMiddleware = require("./cache/cacheMiddleware");
-const { sanitize } = require("validator");
+const xss = require("xss");
 require("dotenv").config();
 
 module.exports = {
   Query: {
     getProfile: cacheMiddleware(async (_, { name }) => {
-      const sanitizedInput = sanitize(name).trim();
+      const sanitizedInput = xss(name).trim();
 
       const activeUser = await pool.query(
         "SELECT * FROM users WHERE name = $1 AND deleted_at IS NULL",
@@ -44,7 +44,7 @@ module.exports = {
   },
   Mutation: {
     async deleteUser(_, { user_id }) {
-      const sanitizedInput = sanitize(user_id).trim();
+      const sanitizedInput = xss(user_id).trim();
 
       await pool.query(
         "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1",
@@ -64,13 +64,13 @@ module.exports = {
         profileCover,
       }
     ) {
-      const sanitizedName = sanitize(name).trim();
-      const sanitizedEmail = sanitize(email).trim();
-      const sanitizedPassword = sanitize(password).trim();
-      const sanitizedConfirmPassword = sanitize(confirmPassword).trim();
-      const sanitizedAge = sanitize(age).trim();
-      const sanitizedProfilePic = sanitize(profilePic).trim();
-      const sanitizedProfileCover = sanitize(profileCover).trim();
+      const sanitizedName = xss(name).trim();
+      const sanitizedEmail = xss(email).trim();
+      const sanitizedPassword = xss(password).trim();
+      const sanitizedConfirmPassword = xss(confirmPassword).trim();
+      const sanitizedAge = xss(age).trim();
+      const sanitizedProfilePic = xss(profilePic).trim();
+      const sanitizedProfileCover = xss(profileCover).trim();
 
       let errors = {};
       password = await bcrypt.hash(sanitizedPassword, 12);
@@ -116,8 +116,8 @@ module.exports = {
       };
     },
     async login(_, { name, password }) {
-      const sanitizedName = sanitize(name).trim();
-      const sanitizedPassword = sanitize(password).trim();
+      const sanitizedName = xss(name).trim();
+      const sanitizedPassword = xss(password).trim();
       const { errors, valid } = validateLoginInput(name, password);
 
       if (!valid) {
