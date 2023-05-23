@@ -19,6 +19,7 @@
     "jsonwebtoken": "^8.5.1",
     "node-schedule": "^2.1.1",
     "pg": "^8.7.1",
-    "redis": "^4.6.6"
+    "redis": "^4.6.6",
+    "validator": "^13.9.0"
   }
 }
