@@ -2,13 +2,16 @@ const cacheMiddleware = require("./cache/cacheMiddleware");
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const { getUsers } = require("./rabbitmq");
+const { sanitize } = require("validator");
 
 module.exports = {
   Query: {
     getCommunity: cacheMiddleware(async (_, { name }) => {
+      const sanitizedInput = sanitize(name).trim();
+
       const getCommunityQuery = await pool.query(
         "SELECT * FROM community WHERE name = $1",
-        [name]
+        [sanitizedInput]
       );
       const getAmountOfMembers = await pool.query(
         "SELECT COUNT(*) FROM members WHERE community_id = $1",
@@ -49,9 +52,11 @@ module.exports = {
       }
     }),
     getCommunityMembers: cacheMiddleware(async (_, { name }) => {
+      const sanitizedInput = sanitize(name).trim();
+
       const getCommunityID = await pool.query(
         "SELECT id FROM community where name = $1",
-        [name]
+        [sanitizedInput]
       );
       const members = await pool.query(
         "SELECT users_id FROM members WHERE community_id = $1",
@@ -77,28 +82,35 @@ module.exports = {
       { name, description, profilepic, coverpic },
       context
     ) {
+      const sanitizedName = sanitize(name).trim();
+      const sanitizedDescription = sanitize(description).trim();
+      const sanitizedProfilePic = sanitize(profilepic).trim();
+      const sanitizedCoverPic = sanitize(coverpic).trim();
+
       const user = checkAuth(context);
       const createQuery = await pool.query(
         "INSERT INTO community(name, description, created_at, creator_id, profilepic, coverpic)  VALUES($1,$2,$3,$4,$5,$6) RETURNING *",
         [
-          name,
-          description,
+          sanitizedName,
+          sanitizedDescription,
           new Date().toISOString().slice(0, 19).replace("T", " "),
           user.user_id,
-          profilepic,
-          coverpic,
+          sanitizedProfilePic,
+          sanitizedCoverPic,
         ]
       );
       return createQuery.rows[0];
     },
     async addMember(_, { community_id }, context) {
+      const sanitizedCommunityId = sanitize(community_id).trim();
+
       const user = checkAuth(context);
       console.log("tilføjer nu member");
       if (!user) throw new Error("Not authenticated");
 
       const getMembers = await pool.query(
         "SELECT * FROM members WHERE community_id = $1",
-        [community_id]
+        [sanitizedCommunityId]
       );
 
       if (
@@ -109,14 +121,14 @@ module.exports = {
         );
         const removeMember = await pool.query(
           "DELETE FROM members WHERE community_id =$1 AND users_id = $2 RETURNING*",
-          [community_id, user.user_id]
+          [sanitizedCommunityId, user.user_id]
         );
         return removeMember.rows[0];
       }
 
       const addMember = await pool.query(
         "INSERT INTO members(community_id, users_id) VALUES($1,$2) RETURNING *",
-        [community_id, user.user_id]
+        [sanitizedCommunityId, user.user_id]
       );
 
       return addMember.rows[0];

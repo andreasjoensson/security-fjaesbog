@@ -1,4 +1,5 @@
 const { MailtrapClient } = require("mailtrap");
+const { normalizeEmail } = require("validator");
 require("dotenv").config();
 
 const sendNewPostNotification = (emails) => {
@@ -12,8 +13,11 @@ const sendNewPostNotification = (emails) => {
     name: "Andreas Moreno",
   };
 
+  //Sanitize e-mails
+  const sanitizedEmails = emails.map((email) => normalizeEmail(email));
+
   //vil ikke spamme så gør det kun med de 2 første  brugere.
-  const slicedArray = emails.slice(0, 2);
+  const slicedArray = sanitizedEmails.slice(0, 2);
 
   const recipients = slicedArray.map((email) => {
     return {

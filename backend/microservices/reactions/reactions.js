@@ -1,20 +1,23 @@
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const cacheMiddleware = require("./cache/cacheMiddleware");
+const { sanitize } = require("validator");
 
 module.exports = {
   Query: {
     getLikes: cacheMiddleware(async (_, { post_id }) => {
+      const sanitized_post_id = sanitize(post_id).trim();
+
       let likeCount = await pool.query(
         "SELECT (SELECT COUNT(*) FROM likes WHERE positive = true AND post_id = $1) - (SELECT COUNT(*) FROM dislikes WHERE positive = false AND post_id = $1) AS DEEZ",
-        [post_id]
+        [sanitized_post_id]
       );
       let likes = await pool.query("SELECT * FROM likes WHERE post_id = $1", [
-        post_id,
+        sanitized_post_id,
       ]);
       let dislikes = await pool.query(
         "SELECT * FROM dislikes WHERE post_id = $1",
-        [post_id]
+        [sanitized_post_id]
       );
 
       return {
@@ -24,17 +27,19 @@ module.exports = {
       };
     }),
     getCommentLikes: cacheMiddleware(async (_, { comment_id }) => {
+      const sanitized_comment_id = sanitize(comment_id).trim();
+
       let likeCount = await pool.query(
         "SELECT (SELECT COUNT(*) FROM commentlikes WHERE comment_id = $1) - (SELECT COUNT(*) FROM commentdislikes WHERE comment_id = $1) AS DEEZ",
-        [comment_id]
+        [sanitized_comment_id]
       );
       let likes = await pool.query(
         "SELECT * FROM commentlikes WHERE comment_id = $1",
-        [comment_id]
+        [sanitized_comment_id]
       );
       let dislikes = await pool.query(
         "SELECT * FROM commentdislikes WHERE comment_id = $1",
-        [comment_id]
+        [sanitized_comment_id]
       );
 
       return {
@@ -44,22 +49,27 @@ module.exports = {
       };
     }),
     getComments: cacheMiddleware(async (_, { post_id }) => {
+      const sanitized_post_id = sanitize(post_id).trim();
+
       const getCommentsQuery = await pool.query(
         "SELECT * FROM comments WHERE post_id = $1",
-        [post_id]
+        [sanitized_post_id]
       );
       return getCommentsQuery.rows;
     }),
   },
   Mutation: {
     async createComment(_, { post_id, text }, context) {
+      const sanitized_post_id = sanitize(post_id).trim();
+      const sanitized_text = sanitize(text).trim();
+
       const user = checkAuth(context);
       const writeCommentQuery = await pool.query(
         "INSERT INTO comments(user_id,text,post_id,created_at,profilepic,name) VALUES($1,$2,$3,$4,$5,$6) RETURNING * ",
         [
           user.user_id,
-          text,
-          post_id,
+          sanitized_text,
+          sanitized_post_id,
           new Date().toISOString().slice(0, 19).replace("T", " "),
           user.profilepic,
           user.name,
@@ -68,31 +78,37 @@ module.exports = {
       return writeCommentQuery.rows[0];
     },
     async deleteComment(_, { comment_id }) {
+      const sanitized_comment_id = sanitize(comment_id).trim();
+
       const deleteQuery = await pool.query(
         "DELETE FROM comments WHERE id = $1 RETURNING *",
-        [comment_id]
+        [sanitized_comment_id]
       );
       return deleteQuery.rows[0];
     },
     async likePost(_, { user_id, post_id }) {
+      const sanitized_user_id = sanitize(user_id).trim();
+      const sanitized_post_id = sanitize(post_id).trim();
+
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM likes WHERE post_id = $1",
-        [post_id]
+        [sanitized_post_id]
       );
       const getCurrentDislikes = await pool.query(
         "SELECT user_id FROM dislikes WHERE post_id = $1",
-        [post_id]
+        [sanitized_post_id]
       );
 
       if (getCurrentLikes) {
         if (
-          getCurrentLikes.rows.filter((like) => like.user_id == user_id)
-            .length > 0
+          getCurrentLikes.rows.filter(
+            (like) => like.user_id == sanitized_user_id
+          ).length > 0
         ) {
           console.log("bruger har allerede liket, fjern like");
           const deleteLike = await pool.query(
             "DELETE FROM likes WHERE post_id =$1 AND user_id=$2 RETURNING *",
-            [post_id, user_id]
+            [sanitized_post_id, sanitized_user_id]
           );
           return deleteLike.rows[0];
         } else if (
@@ -110,8 +126,8 @@ module.exports = {
           const like = await pool.query(
             "INSERT INTO likes(user_id, post_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              post_id,
+              sanitized_user_id,
+              sanitized_post_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
@@ -120,8 +136,8 @@ module.exports = {
           const like = await pool.query(
             "INSERT INTO likes(user_id, post_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              post_id,
+              sanitized_user_id,
+              sanitized_post_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
@@ -130,13 +146,16 @@ module.exports = {
       }
     },
     async likeComment(_, { user_id, comment_id }) {
+      const sanitized_user_id = sanitize(user_id).trim();
+      const sanitized_comment_id = sanitize(comment_id).trim();
+
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM commentlikes WHERE comment_id = $1",
-        [comment_id]
+        [sanitized_comment_id]
       );
       const getCurrentDislikes = await pool.query(
         "SELECT user_id FROM commentdislikes WHERE comment_id = $1",
-        [comment_id]
+        [sanitized_comment_id]
       );
 
       if (getCurrentLikes) {
@@ -147,7 +166,7 @@ module.exports = {
           console.log("bruger har allerede liket, fjern like");
           const deleteLike = await pool.query(
             "DELETE FROM commentlikes WHERE comment_id =$1 AND user_id=$2 RETURNING *",
-            [comment_id, user_id]
+            [sanitized_comment_id, sanitized_user_id]
           );
           return deleteLike.rows[0];
         } else if (
@@ -160,13 +179,13 @@ module.exports = {
           );
           await pool.query(
             "DELETE FROM commentdislikes WHERE comment_id = $1 AND user_id = $2",
-            [comment_id, user_id]
+            [sanitized_comment_id, sanitized_user_id]
           );
           const like = await pool.query(
             "INSERT INTO commentlikes(user_id, comment_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              comment_id,
+              sanitized_user_id,
+              sanitized_comment_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
@@ -175,8 +194,8 @@ module.exports = {
           const like = await pool.query(
             "INSERT INTO commentlikes(user_id, comment_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              comment_id,
+              sanitized_user_id,
+              sanitized_comment_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
@@ -185,13 +204,16 @@ module.exports = {
       }
     },
     async dislikePost(_, { post_id, user_id }) {
+      const sanitized_user_id = sanitize(user_id).trim();
+      const sanitized_post_id = sanitize(post_id).trim();
+
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM likes WHERE post_id = $1",
-        [post_id]
+        [sanitized_post_id]
       );
       const getCurrentDislikes = await pool.query(
         "SELECT user_id FROM dislikes WHERE post_id = $1",
-        [post_id]
+        [sanitized_post_id]
       );
 
       if (getCurrentDislikes) {
@@ -203,7 +225,7 @@ module.exports = {
           console.log("bruger har allerede disliket, fjern dislike");
           const deleteDislike = await pool.query(
             "DELETE FROM dislikes WHERE post_id =$1 AND user_id=$2 RETURNING *",
-            [post_id, user_id]
+            [sanitized_post_id, sanitized_user_id]
           );
           return deleteDislike.rows[0];
         } else if (
@@ -215,13 +237,13 @@ module.exports = {
           );
           await pool.query(
             "DELETE FROM likes WHERE post_id = $1 AND user_id = $2",
-            [post_id, user_id]
+            [sanitized_post_id, sanitized_user_id]
           );
           const dislike = await pool.query(
             "INSERT INTO dislikes(user_id, post_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              post_id,
+              sanitized_user_id,
+              sanitized_post_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
@@ -230,8 +252,8 @@ module.exports = {
           const dislike = await pool.query(
             "INSERT INTO dislikes(user_id, post_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              post_id,
+              sanitized_user_id,
+              sanitized_post_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
@@ -240,13 +262,16 @@ module.exports = {
       }
     },
     async dislikeComment(_, { comment_id, user_id }) {
+      const sanitized_user_id = sanitize(user_id).trim();
+      const sanitized_comment_id = sanitize(comment_id).trim();
+
       const getCurrentLikes = await pool.query(
         "SELECT user_id FROM commentlikes WHERE comment_id = $1",
-        [comment_id]
+        [sanitized_comment_id]
       );
       const getCurrentDislikes = await pool.query(
         "SELECT user_id FROM commentdislikes WHERE comment_id = $1",
-        [comment_id]
+        [sanitized_comment_id]
       );
 
       if (getCurrentDislikes) {
@@ -258,7 +283,7 @@ module.exports = {
           console.log("bruger har allerede disliket, fjern dislike");
           const deleteDislike = await pool.query(
             "DELETE FROM commentdislikes WHERE comment_id =$1 AND user_id=$2 RETURNING*",
-            [comment_id, user_id]
+            [sanitized_comment_id, sanitized_user_id]
           );
           return deleteDislike.rows[0];
         } else if (
@@ -271,13 +296,13 @@ module.exports = {
           );
           await pool.query(
             "DELETE FROM commentlikes WHERE comment_id = $1 AND user_id = $2",
-            [comment_id, user_id]
+            [sanitized_comment_id, sanitized_user_id]
           );
           const dislike = await pool.query(
             "INSERT INTO commentdislikes(user_id, comment_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              comment_id,
+              sanitized_user_id,
+              sanitized_comment_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
@@ -286,8 +311,8 @@ module.exports = {
           const dislike = await pool.query(
             "INSERT INTO commentdislikes(user_id, comment_id,created_at) VALUES($1,$2,$3) RETURNING *",
             [
-              user_id,
-              comment_id,
+              sanitized_user_id,
+              sanitized_comment_id,
               new Date().toISOString().slice(0, 19).replace("T", " "),
             ]
           );
