@@ -17,7 +17,7 @@ const gateway = new ApolloGateway({
       name: "community",
       url: "https://fjaesbog-community.azurewebsites.net/graphql",
     },
-    { name: "users", url: "https://fjaesbog-users.azurewebsites.net/graphql" },
+    { name: "users", url: "https://fjaesbog-user.azurewebsites.net/graphql" },
     {
       name: "reactions",
       url: "https://fjaesbog-reactions.azurewebsites.net/graphql",
