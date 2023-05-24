@@ -30,20 +30,23 @@ export default function Login() {
   const history = useHistory();
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const [login] = useMutation(LOGIN_QUERY, {
     update(_, { data: { login: userData } }) {
-      console.log("user", userData);
+      setLoading(false);
       context.login(userData);
       history.push("/dashboard");
     },
     onError(err) {
+      setLoading(false);
       setErrors(err.graphQLErrors[0].extensions.errors);
     },
   });
 
   const submitLogin = (e) => {
     e.preventDefault();
+    setLoading(true);
 
     login({
       variables: {
@@ -97,9 +100,22 @@ export default function Login() {
               </Link>
             </div>
 
-            <button type="submit" className="loginButton">
-              Login
-            </button>
+            {loading ? (
+              <button
+                type="submit"
+                className="loginButton d-flex justify-content-center"
+              >
+                Logger ind....{" "}
+                <div
+                  class="spinner-grow spinner-grow-sm ms-3"
+                  role="status"
+                ></div>
+              </button>
+            ) : (
+              <button type="submit" className="loginButton">
+                Login
+              </button>
+            )}
 
             <a href="/register" className="registerA">
               Har du ikke lavet en konto endnu? Registrer her.
@@ -116,7 +132,10 @@ export default function Login() {
           )}
         </div>
       </div>
-      <Spline scene="https://prod.spline.design/oPYLiDyNhuFxiZZc/scene.splinecode" />
+      <Spline
+        className="spline"
+        scene="https://prod.spline.design/oPYLiDyNhuFxiZZc/scene.splinecode"
+      />
     </div>
   );
 }

@@ -85,13 +85,6 @@ export default function RegisterStepFive({
     }
   };
 
-  if (loading)
-    return (
-      <div class="lds-circle">
-        <div></div>
-      </div>
-    );
-
   return (
     <div className="regContainer h-100 align-items-center">
       <div className="registerContainer">
@@ -127,9 +120,26 @@ export default function RegisterStepFive({
               <button className="registerButton red" onClick={() => prevStep()}>
                 Tilbage
               </button>
-              <button className="registerButton ms-3" onClick={submitFormData}>
-                Opret
-              </button>
+
+              {!loading ? (
+                <button
+                  type="submit"
+                  className="registerButton ms-3 d-flex justify-content-center"
+                >
+                  Opretter....{" "}
+                  <div
+                    class="spinner-grow spinner-grow-sm ms-3"
+                    role="status"
+                  ></div>
+                </button>
+              ) : (
+                <button
+                  className="registerButton ms-3"
+                  onClick={submitFormData}
+                >
+                  Opret
+                </button>
+              )}
             </div>
           </div>
         </div>

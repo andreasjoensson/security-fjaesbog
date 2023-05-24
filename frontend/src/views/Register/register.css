@@ -49,3 +49,30 @@
 .red {
   background: #393e46 !important;
 }
+
+@media only screen and (max-width: 600px) {
+  .login {
+    flex-direction: column;
+  }
+
+  .register-container {
+    display: flex;
+  }
+
+  .reg-steps {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  .reg-comp {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  .progressList {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 15px;
+    column-gap: 50px;
+  }
+}

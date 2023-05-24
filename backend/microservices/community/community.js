@@ -20,7 +20,7 @@ module.exports = {
         members: getAmountOfMembers.rows[0].count,
       };
     }),
-    getCommunitiesByUser: cacheMiddleware(async (_, {}, context) => {
+    getCommunitiesByUser: async (_, {}, context) => {
       const user = checkAuth(context);
       const client = await pool.connect();
       try {
@@ -47,8 +47,8 @@ module.exports = {
       } finally {
         client.release();
       }
-    }),
-    getCommunityMembers: cacheMiddleware(async (_, { name }) => {
+    },
+    getCommunityMembers: async (_, { name }) => {
       const getCommunityID = await pool.query(
         "SELECT id FROM community where name = $1",
         [name]
@@ -58,7 +58,7 @@ module.exports = {
         [getCommunityID.rows[0].id]
       );
       return members.rows;
-    }),
+    },
     getAll: cacheMiddleware(async () => {
       const users = await getUsers();
       const forums = await pool.query("SELECT * FROM community");

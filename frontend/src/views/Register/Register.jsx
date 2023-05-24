@@ -143,15 +143,18 @@ const Register = () => {
   return (
     <div className="register">
       <div className="container-fluid h-100">
-        <div className="row h-100">
-          <div className="col-3 h-100" style={{ background: "black" }}>
+        <div className="row register-container h-100">
+          <div
+            className="col-3 reg-steps h-100"
+            style={{ background: "black" }}
+          >
             <div className="logo logo-white">
               <img src={logo} />
             </div>
             <RegisterStepper step={step} />
           </div>
 
-          <div className="col-9 h-100">
+          <div className="col-9 reg-comp h-100">
             <RegisterMainComponent step={step} setUser={setUser} user={user} />
           </div>
         </div>
