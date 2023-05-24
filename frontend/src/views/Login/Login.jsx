@@ -62,8 +62,8 @@ export default function Login() {
 
         <div className="loginContainer">
           <div className="loginText mb-3">
-            <h1>Log ind på din konto</h1>
-            <p>Log ind for at få adgang til en commmunity af studerende!</p>
+            <h1>Log ind</h1>
+            <p>Log ind for at få adgang til en commmunity af studerende nu!</p>
           </div>
 
           <form className="loginForm mt-3 " onSubmit={submitLogin}>
