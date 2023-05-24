@@ -4,7 +4,7 @@ const cacheMiddleware = require("./cache/cacheMiddleware");
 
 module.exports = {
   Query: {
-    getLikes: cacheMiddleware(async (_, { post_id }) => {
+    getLikes: async (_, { post_id }) => {
       let likeCount = await pool.query(
         "SELECT (SELECT COUNT(*) FROM likes WHERE positive = true AND post_id = $1) - (SELECT COUNT(*) FROM dislikes WHERE positive = false AND post_id = $1) AS DEEZ",
         [post_id]
@@ -22,8 +22,8 @@ module.exports = {
         likes: likes.rows,
         dislikes: dislikes.rows,
       };
-    }),
-    getCommentLikes: cacheMiddleware(async (_, { comment_id }) => {
+    },
+    getCommentLikes: async (_, { comment_id }) => {
       let likeCount = await pool.query(
         "SELECT (SELECT COUNT(*) FROM commentlikes WHERE comment_id = $1) - (SELECT COUNT(*) FROM commentdislikes WHERE comment_id = $1) AS DEEZ",
         [comment_id]
@@ -42,14 +42,14 @@ module.exports = {
         likes: likes.rows,
         dislikes: dislikes.rows,
       };
-    }),
-    getComments: cacheMiddleware(async (_, { post_id }) => {
+    },
+    getComments: async (_, { post_id }) => {
       const getCommentsQuery = await pool.query(
         "SELECT * FROM comments WHERE post_id = $1",
         [post_id]
       );
       return getCommentsQuery.rows;
-    }),
+    },
   },
   Mutation: {
     async createComment(_, { post_id, text }, context) {
