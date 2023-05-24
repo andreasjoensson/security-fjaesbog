@@ -2,6 +2,8 @@ var amqp = require("amqplib/callback_api");
 const { sendNewPostNotification } = require("../util");
 require("dotenv").config();
 
+//tesr
+
 const listenForNewPosts = () => {
   amqp.connect(process.env.AMQP_URL, function (error0, connection) {
     if (error0) {

@@ -100,6 +100,7 @@ router.post("/forgot", async function (req, res, next) {
     res.status(400).json({ error: "Der er ikke nogen bruger med den e-mail." });
   } else {
     await sendPasswordResetEmail(email, user.rows[0].name);
+    console.log("he");
     // if password reset is successful:
     res.json({ message: "Jeg har sendt en e-mail til dig nu!" });
   }
