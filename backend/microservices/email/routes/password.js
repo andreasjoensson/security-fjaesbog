@@ -43,12 +43,18 @@ var router = express.Router();
  *     responses:
  *       200:
  *         description: Det nye password er blevet opsat!.
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/ResetPassword'
+ *         schema:
+ *           type: object
+ *           properties:
+ *            message:
+ *             type: string
  *       500:
- *         description: Der er sket en fejl!.
+ *         description: Der er sket en fejl
+ *         schema:
+ *          type: object
+ *          properties:
+ *           error:
+ *            type: string
  * /forgot:
  *   post:
  *     summary: Få sendt mail til at resette password
@@ -66,18 +72,22 @@ var router = express.Router();
  *     responses:
  *       200:
  *         description: Du har fået sendt en e-mail du kan bruge til at resette dit password!
- *         content:
- *           application/json:
- *             schema:
- *               schema:
- *                type: object
- *                properties:
- *                 email:
- *                  type: string
- *                  format: email
+ *         schema:
+ *          type: object
+ *          properties:
+ *           message:
+ *            type: string
  *       500:
- *         description: Der er sket en fejl!.
- *
+ *         description: Der er sket en fejl
+ *         schema:
+ *          type: object
+ *          properties:
+ *           error:
+ *            type: string
+ *          examples:
+            application/json:
+              value:
+                message: Hello, world!
  */
 
 router.post("/forgot", async function (req, res, next) {
