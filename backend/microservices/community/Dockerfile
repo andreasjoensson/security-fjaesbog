@@ -13,9 +13,6 @@ RUN npm install
 # Copy the rest of your service's code to the working directory
 COPY . .
 
-# Copy the .env file
-COPY .env .
-
 # Expose the port that your service listens on
 EXPOSE 1000
 
