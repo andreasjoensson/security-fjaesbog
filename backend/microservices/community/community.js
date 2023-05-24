@@ -78,6 +78,7 @@ module.exports = {
       context
     ) {
       const user = checkAuth(context);
+      console.log("user", user);
       const createQuery = await pool.query(
         "INSERT INTO community(name, description, created_at, creator_id, profilepic, coverpic)  VALUES($1,$2,$3,$4,$5,$6) RETURNING *",
         [
