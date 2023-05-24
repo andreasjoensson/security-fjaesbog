@@ -6,6 +6,80 @@ const {
 const pool = require("../database/db");
 var router = express.Router();
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *   ResetPassword:
+ *       type: object
+ *       required:
+ *         - token
+ *         - password
+ *       properties:
+ *         token:
+ *           type: string
+ *           description: Unik token som er blevet genereret ved sendt e-mail
+ *         password:
+ *           type: string
+ *           description: Det nye password du har valgt at sætte
+ *       example:
+ *         token: d5fE_aszd5fE_aszd5fE_asz
+ *         password: mitnyepassword123
+ *
+ */
+
+/**
+ * @swagger
+ * /reset:
+ *   post:
+ *     summary: Sæt et nyt password
+ *     tags: [Reset Password]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ResetPassword'
+ *     responses:
+ *       200:
+ *         description: Det nye password er blevet opsat!.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ResetPassword'
+ *       500:
+ *         description: Der er sket en fejl!.
+ * /forgot:
+ *   post:
+ *     summary: Få sendt mail til at resette password
+ *     tags: [Anmod om nyt Password]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *     responses:
+ *       200:
+ *         description: Du har fået sendt en e-mail du kan bruge til at resette dit password!
+ *         content:
+ *           application/json:
+ *             schema:
+ *               schema:
+ *                type: object
+ *                properties:
+ *                 email:
+ *                  type: string
+ *                  format: email
+ *       500:
+ *         description: Der er sket en fejl!.
+ *
+ */
+
 router.post("/forgot", async function (req, res, next) {
   const { email } = req.body;
   const user = await pool.query("SELECT * from users WHERE email = $1", [

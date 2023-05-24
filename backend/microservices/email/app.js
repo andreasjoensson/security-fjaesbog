@@ -4,7 +4,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 var cors = require("cors");
-
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 var indexRouter = require("./routes/index");
 var forgotPasswordRouter = require("./routes/password");
 
@@ -23,6 +24,36 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/password", forgotPasswordRouter);
+
+const options = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Email Service Express API with Swagger",
+      version: "0.1.0",
+      description:
+        "Det her er en Email service til at anmode om et nyt password.",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
+      },
+      contact: {
+        name: "Andreas Moreno Jønsson",
+        url: "https://andreasmoreno.dk",
+        email: "andreas.ecuador@live.dk",
+      },
+    },
+    servers: [
+      {
+        url: "http://localhost:1040",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsdoc(options);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
