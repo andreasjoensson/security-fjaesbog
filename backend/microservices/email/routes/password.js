@@ -30,7 +30,7 @@ var router = express.Router();
 
 /**
  * @swagger
- * /reset:
+ * /password/reset:
  *   post:
  *     summary: Sæt et nyt password
  *     tags: [Reset Password]
@@ -55,7 +55,7 @@ var router = express.Router();
  *          properties:
  *           error:
  *            type: string
- * /forgot:
+ * /password/forgot:
  *   post:
  *     summary: Få sendt mail til at resette password
  *     tags: [Anmod om nyt Password]
