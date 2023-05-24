@@ -8,17 +8,17 @@ const cacheMiddleware = require("./cache/cacheMiddleware");
 
 module.exports = {
   Query: {
-    getPosts: cacheMiddleware(async (_) => {
+    getPosts: async (_) => {
       let res = await pool.query("SELECT * FROM posts");
       return res.rows;
-    }),
+    },
     getPostsFromUser: cacheMiddleware(async (_, { name }) => {
       let posts = await pool.query("SELECT * FROM posts WHERE name = $1", [
         name,
       ]);
       return posts.rows;
     }),
-    getCommunityPosts: cacheMiddleware(async (_, { name }) => {
+    getCommunityPosts: async (_, { name }) => {
       //kald på anden microservice
       try {
         const communityId = await getCommunityByIdName(name);
@@ -31,7 +31,7 @@ module.exports = {
       } catch (err) {
         console.error(err);
       }
-    }),
+    },
   },
   Mutation: {
     async createPost(_, { title, text, image, community_id }, context) {
