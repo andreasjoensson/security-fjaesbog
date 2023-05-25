@@ -17,6 +17,7 @@ import { AuthContext } from "./context/auth";
 import Admin from "./views/Admin/Admin";
 import AdminUsers from "./views/AdminUsers/AdminUsers";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
+import Callback from "./views/Callback/Callback";
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
         </Route>
         <Route exact path="/reset/:token">
           <ResetKode />
+        </Route>
+        <Route exact path="/callback">
+          <Callback />
         </Route>
         <Route exact path="/register">
           <Register />

@@ -52,6 +52,14 @@ export default function Login() {
     },
   });
 
+  const CLIENT_ID = "cee4f57a36b40c930bd7";
+  const REDIRECT_URI = "https://zucc.dk/callback";
+
+  const handleGithubLogin = (e) => {
+    e.preventDefault();
+    window.location.href = `https://github.com/login/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`;
+  };
+
   if (loggedIn && context.user.role !== "ADMIN") {
     // Redirect to the protected route after successful login
     return <Redirect to="/dashboard" />;
@@ -129,9 +137,21 @@ export default function Login() {
                 ></div>
               </button>
             ) : (
-              <button type="submit" className="loginButton">
-                Login
-              </button>
+              <>
+                <button type="submit" className="loginButton">
+                  Login
+                </button>
+                <button
+                  onClick={(e) => handleGithubLogin(e)}
+                  className="loginButton"
+                >
+                  <img
+                    src={require("../../assets/github-logo.png")}
+                    className="small-logo me-3"
+                  />{" "}
+                  Login med Github
+                </button>
+              </>
             )}
 
             <a href="/register" className="registerA">

@@ -87,7 +87,7 @@ module.exports = {
     },
     getUsers: async () => {
       const query =
-        "SELECT u.*, CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END AS banned FROM users u LEFT JOIN banlist b ON u.user_id = b.user_id";
+        "SELECT u.*, CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END AS banned, b.reason AS ban_reason FROM users u LEFT JOIN banlist b ON u.user_id = b.user_id";
       const getUsers = await pool.query(query);
       return getUsers.rows;
     },
