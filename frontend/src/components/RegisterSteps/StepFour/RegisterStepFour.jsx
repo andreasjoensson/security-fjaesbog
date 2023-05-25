@@ -54,7 +54,7 @@ export default function RegisterStepFour({
               style={{ border: error ? "2px solid red" : "" }}
               type="text"
               className="register-input"
-              placeholder="Indtast din alder.."
+              placeholder="Indtast dit telefonnummer.."
               onChange={handleChange("phone")}
               value={user.phone}
             />

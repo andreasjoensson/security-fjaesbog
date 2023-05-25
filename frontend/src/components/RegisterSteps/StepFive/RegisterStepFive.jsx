@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../../context/auth";
 import { useState } from "react";
 import validator from "validator";
+import { Redirect } from "react-router-dom";
 
 export default function RegisterStepFive({
   nextStep,
@@ -14,6 +15,9 @@ export default function RegisterStepFive({
   step,
 }) {
   const history = useHistory();
+  const [loggedIn, setLoggedIn] = useState(false);
+  //creating error state for validation
+  const [error, setError] = useState(false);
   const context = useContext(AuthContext);
   const CREATE_USER_MUTATION = gql`
     mutation CreateUserMutation(
@@ -50,12 +54,14 @@ export default function RegisterStepFive({
     update(_, { data: { createUser: userData } }) {
       console.log("user", userData);
       context.login(userData);
-      history.push("/dashboard");
+      setLoggedIn(true); // Set loggedIn state to trigger the redirect
     },
   });
 
-  //creating error state for validation
-  const [error, setError] = useState(false);
+  if (loggedIn) {
+    // Redirect to the protected route after successful login
+    return <Redirect to="/dashboard" />;
+  }
 
   // after form submit validating the form data using validator
   const submitFormData = (e) => {
