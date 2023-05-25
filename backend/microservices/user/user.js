@@ -134,8 +134,6 @@ module.exports = {
         [school.Navn, school.Logo]
       );
 
-      console.log("schoolInsert", schoolInsert);
-
       let now = new Date(); //getting current date
       let currentY = now.getFullYear(); //extracting year from the date
       let currentM = now.getMonth(); //extracting month from the date
@@ -148,7 +146,7 @@ module.exports = {
       var ageM = Math.abs(currentM - prevM); //converting any negative value to positive
 
       const res = await pool.query(
-        "INSERT INTO users(name, email, age, password, school, profilepic, profilecover, created_at) VALUES($1,$2,$3,$4,$5,$6, $7, $8) RETURNING *",
+        "INSERT INTO users(name, email, age, password, school, profilepic, profilecover, created_at, role) VALUES($1,$2,$3,$4,$5,$6, $7, $8, $9) RETURNING *",
         [
           name,
           email,
@@ -158,6 +156,7 @@ module.exports = {
           profilePic,
           profileCover,
           new Date().toISOString().slice(0, 19).replace("T", " "),
+          "USER",
         ]
       );
 
@@ -194,8 +193,8 @@ module.exports = {
     `;
 
       const isBanned = await pool.query(query, [user.rows[0].id]);
-      console.log("fds", isBanned);
-      if (isBanned) {
+      console.log("fds", isBanned.rows[0].exists);
+      if (isBanned.rows[0].exists) {
         errors.general = "Du er blevet banned fra den her platform!";
         throw new UserInputError("Du er blevet banned", { errors });
       }

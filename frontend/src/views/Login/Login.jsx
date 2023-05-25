@@ -8,6 +8,7 @@ import { AuthContext } from "../../context/auth";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
 import Spline from "@splinetool/react-spline";
+import { Redirect } from "react-router-dom";
 
 const LOGIN_QUERY = gql`
   mutation login($name: String!, $password: String!) {
@@ -20,6 +21,7 @@ const LOGIN_QUERY = gql`
       profilepic
       profilecover
       name
+      role
     }
   }
 `;
@@ -31,18 +33,33 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   const [login] = useMutation(LOGIN_QUERY, {
     update(_, { data: { login: userData } }) {
       setLoading(false);
       context.login(userData);
-      history.push("/dashboard");
+      setLoggedIn(true); // Set loggedIn state to trigger the redirect
+      if (userData.role === "ADMIN") {
+        //history.push("/admin");
+      } else {
+        //history.push("/dashboard");
+      }
     },
     onError(err) {
       setLoading(false);
       setErrors(err.graphQLErrors[0].extensions.errors);
     },
   });
+
+  if (loggedIn && context.user.role !== "ADMIN") {
+    // Redirect to the protected route after successful login
+    return <Redirect to="/dashboard" />;
+  }
+
+  if (loggedIn && context.user.role === "ADMIN") {
+    return <Redirect to="/admin" />;
+  }
 
   const submitLogin = (e) => {
     e.preventDefault();

@@ -67,6 +67,7 @@ const typeDefs = gql`
     last_login: String
     reason: String
     banned: Boolean
+    role: String
   }
 `;
 

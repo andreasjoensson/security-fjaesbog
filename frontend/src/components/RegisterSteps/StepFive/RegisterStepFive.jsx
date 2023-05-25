@@ -121,7 +121,7 @@ export default function RegisterStepFive({
                 Tilbage
               </button>
 
-              {!loading ? (
+              {loading ? (
                 <button
                   type="submit"
                   className="registerButton ms-3 d-flex justify-content-center"

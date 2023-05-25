@@ -3,14 +3,14 @@ import { Route, Redirect } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth";
 
-const PrivateRoute = ({ children, ...rest }) => {
+const AdminRoute = ({ children, ...rest }) => {
   const { user } = useContext(AuthContext);
 
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        user ? (
+        user && user.role == "ADMIN" ? (
           children
         ) : (
           <Redirect
@@ -25,4 +25,4 @@ const PrivateRoute = ({ children, ...rest }) => {
   );
 };
 
-export default PrivateRoute;
+export default AdminRoute;

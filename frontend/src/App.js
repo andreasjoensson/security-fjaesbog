@@ -16,6 +16,7 @@ import PrivateRoute from "./components/RouteGuard/PrivateRoute";
 import { AuthContext } from "./context/auth";
 import Admin from "./views/Admin/Admin";
 import AdminUsers from "./views/AdminUsers/AdminUsers";
+import AdminRoute from "./components/RouteGuard/AdminRoute";
 
 function App() {
   return (
@@ -33,27 +34,27 @@ function App() {
         <Route exact path="/register">
           <Register />
         </Route>
-        <PrivateRoute isAuthenticated={true} exact path="/dashboard">
+        <PrivateRoute exact path="/dashboard">
           <Dashboard />
         </PrivateRoute>
-        <PrivateRoute isAuthenticated={true} exact path="/search">
+        <PrivateRoute exact path="/search">
           <Search />
         </PrivateRoute>
-        <PrivateRoute isAuthenticated={true} path="/profile/:id">
+        <PrivateRoute path="/profile/:id">
           <Profile />
         </PrivateRoute>
-        <PrivateRoute isAuthenticated={true} path="/forum/:id">
+        <PrivateRoute path="/forum/:id">
           <Forum />
         </PrivateRoute>
-        <PrivateRoute isAuthenticated={true} exact path="/opretforum">
+        <PrivateRoute exact path="/opretforum">
           <CreateForum />
         </PrivateRoute>
-        <PrivateRoute isAuthenticated={true} exact path="/admin">
+        <AdminRoute exact path="/admin">
           <Admin />
-        </PrivateRoute>
-        <PrivateRoute isAuthenticated={true} exact path="/adminusers">
+        </AdminRoute>
+        <AdminRoute exact path="/adminusers">
           <AdminUsers />
-        </PrivateRoute>
+        </AdminRoute>
       </Router>
     </AuthProvider>
   );
