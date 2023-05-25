@@ -11,6 +11,11 @@ import CreateForum from "./views/CreateForum/CreateForum";
 import Search from "./views/SearchPage/Search";
 import ForgotPassword from "./views/ForgotPassword/ForgotPassword";
 import ResetKode from "./views/ResetKode/ResetKode";
+import { useContext, useEffect } from "react";
+import PrivateRoute from "./components/RouteGuard/PrivateRoute";
+import { AuthContext } from "./context/auth";
+import Admin from "./views/Admin/Admin";
+import AdminUsers from "./views/AdminUsers/AdminUsers";
 
 function App() {
   return (
@@ -28,21 +33,27 @@ function App() {
         <Route exact path="/register">
           <Register />
         </Route>
-        <Route exact path="/dashboard">
+        <PrivateRoute isAuthenticated={true} exact path="/dashboard">
           <Dashboard />
-        </Route>
-        <Route exact path="/search">
+        </PrivateRoute>
+        <PrivateRoute isAuthenticated={true} exact path="/search">
           <Search />
-        </Route>
-        <Route path="/profile/:id">
+        </PrivateRoute>
+        <PrivateRoute isAuthenticated={true} path="/profile/:id">
           <Profile />
-        </Route>
-        <Route path="/forum/:id">
+        </PrivateRoute>
+        <PrivateRoute isAuthenticated={true} path="/forum/:id">
           <Forum />
-        </Route>
-        <Route exact path="/opretforum">
+        </PrivateRoute>
+        <PrivateRoute isAuthenticated={true} exact path="/opretforum">
           <CreateForum />
-        </Route>
+        </PrivateRoute>
+        <PrivateRoute isAuthenticated={true} exact path="/admin">
+          <Admin />
+        </PrivateRoute>
+        <PrivateRoute isAuthenticated={true} exact path="/adminusers">
+          <AdminUsers />
+        </PrivateRoute>
       </Router>
     </AuthProvider>
   );

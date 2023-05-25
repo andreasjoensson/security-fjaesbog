@@ -1,4 +1,4 @@
-import "./sidebar.css";
+import "./adminbar.css";
 import logo from "../../assets/logo.png";
 import {
   AssessmentRounded,
@@ -15,10 +15,12 @@ import { AccountCircleOutlined } from "@material-ui/icons";
 import { Redirect, useHistory } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth";
-function Sidebar({ currentPage }) {
+
+function Adminbar({ currentPage }) {
   const { user } = useContext(AuthContext);
   const history = useHistory();
 
+  /*
   const GET_COMMUNITIES_QUERY = gql`
     query GetCommunitiesByUser {
       getCommunitiesByUser {
@@ -44,6 +46,8 @@ function Sidebar({ currentPage }) {
       </div>
     );
 
+    */
+
   return (
     <div className="sidebar col-3">
       <div className="logo-container">
@@ -51,7 +55,7 @@ function Sidebar({ currentPage }) {
       </div>
       <nav>
         <ul className="sidebarNav">
-          <Link to="/dashboard">
+          <Link to="/admin">
             <li
               className={`sidebarItem ${
                 currentPage == "dashboard" ? "active" : ""
@@ -63,60 +67,17 @@ function Sidebar({ currentPage }) {
             </li>
           </Link>
 
-          <Link to={`/profile/${user.name}`}>
+          <Link to={`/adminusers`}>
             <li
               className={`sidebarItem ${
-                currentPage == "profile" ? "active" : ""
+                currentPage == "adminusers" ? "active" : ""
               }`}
             >
               <div className="active-line"></div>
               <AccountCircleOutlined className="sidebarLogo" />
-              <p>Min Profil</p>
+              <p>Brugere</p>
             </li>
           </Link>
-
-          <Link to="/search">
-            <li
-              className={`sidebarItem ${
-                currentPage == "search" ? "active" : ""
-              }`}
-            >
-              <div className="active-line"></div>
-              <SearchOutlined className="sidebarLogo" />
-              <p>Søg</p>
-            </li>
-          </Link>
-        </ul>
-      </nav>
-
-      <nav>
-        <p className="undertitles">Forum</p>
-        <ul className="sidebarNav">
-          <Link to="/opretforum">
-            <li
-              className={`sidebarItem ${
-                currentPage == "opretforum" ? "active" : ""
-              }`}
-            >
-              <div className="active-line"></div>
-              <ForumOutlined className="sidebarLogo" />
-              <p>Opret forum</p>
-            </li>
-          </Link>
-          {data?.getCommunitiesByUser.map((community) => (
-            <Link to={`/forum/${community.name}`}>
-              <li
-                className={`sidebarItem ${
-                  currentPage == community.name ? "active" : ""
-                }`}
-              >
-                <div className="active-line"></div>
-                <img className="sidebarIcon" src={community.profilepic} />
-                <p>{community.name}</p>
-              </li>
-            </Link>
-          ))}
-          ;
         </ul>
       </nav>
 
@@ -129,4 +90,4 @@ function Sidebar({ currentPage }) {
   );
 }
 
-export default Sidebar;
+export default Adminbar;

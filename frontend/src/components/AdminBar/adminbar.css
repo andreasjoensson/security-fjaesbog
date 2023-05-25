@@ -1,0 +1,118 @@
+.sidebar {
+  flex: 1;
+  height: 100vh;
+  position: relative;
+}
+.logo-container > img {
+  margin-top: 30px;
+}
+.logo-container {
+  display: flex;
+  margin-bottom: 60px;
+  justify-content: center;
+}
+.sidebarNav {
+  list-style: none;
+  padding: 0px;
+}
+a {
+  text-decoration: none;
+}
+.sidebarItem {
+  display: flex;
+  align-items: center;
+  color: #86a2b8;
+  margin-bottom: 30px;
+  position: relative;
+  cursor: pointer;
+}
+.sidebarItem > p {
+  font-weight: 500;
+  margin-bottom: 0px;
+}
+.sidebarIcon {
+  width: 24px;
+  height: 24px;
+  margin-left: 50px;
+  margin-right: 8px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.sidebarLogo {
+  margin-left: 50px;
+  margin-right: 8px;
+  color: #86a2b8;
+}
+.active {
+  color: #0f8af9;
+}
+.active > .sidebarLogo {
+  color: #0f8af9;
+}
+.active > p {
+  font-weight: 600;
+}
+.expandMore {
+  position: absolute;
+  right: 12px;
+}
+.active-line {
+  height: 40px;
+  width: 2px;
+  background: #0f8af9;
+  position: absolute;
+  left: 40px;
+  display: none;
+}
+
+.active > .active-line {
+  display: block;
+}
+.undertitles {
+  margin-left: 50px;
+  color: #86a2b8;
+}
+.copyright {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.copyright h2 {
+  font-size: 1rem;
+  display: flex;
+  justify-content: center;
+  font-weight: 500;
+}
+
+.copyright > p {
+  font-weight: 100;
+}
+.copyrightLogo {
+  margin-right: 5px;
+}
+
+@media only screen and (max-width: 900px) {
+  .sidebar > nav:nth-child(3) {
+    display: none;
+  }
+  .copyright {
+    display: none;
+  }
+  .sidebarNav {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .input-container {
+    margin-left: 75px;
+  }
+  .currentUser {
+    flex: 2;
+  }
+  .profilePage {
+    flex-direction: column;
+  }
+}

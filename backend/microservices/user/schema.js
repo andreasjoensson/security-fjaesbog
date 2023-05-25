@@ -4,6 +4,7 @@ const typeDefs = gql`
   type Query {
     getUsers: [User]
     getProfile(name: String!): User
+    getDashboardStats: DashboardStats
   }
 
   type Mutation {
@@ -18,8 +19,29 @@ const typeDefs = gql`
       profileCover: String!
     ): User
     login(name: String!, password: String!): User
+    banUser(user_id: Int!, reason: String!): User
+    unbanUser(user_id: Int!): User
     forgotPassword(email: String!): String
     resetKode(token: String!, password: String!): User
+  }
+
+  type DashboardStats {
+    dailyNewUsers: Int!
+    weeklyNewUsers: Int!
+    totalUsers: Int!
+    bannedUsers: [BannedUser]
+    topCommunity: [TopCommunity]
+  }
+
+  type TopCommunity {
+    name: String!
+    members: Int!
+  }
+
+  type BannedUser {
+    name: String!
+    reason: String!
+    profilepic: String
   }
 
   type School {
@@ -43,6 +65,8 @@ const typeDefs = gql`
     token: String
     created_at: String
     last_login: String
+    reason: String
+    banned: Boolean
   }
 `;
 
