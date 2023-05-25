@@ -7,6 +7,8 @@ const { validateLoginInput } = require("./validations");
 const amqp = require("amqplib/callback_api");
 const { newUserCreatedMessage } = require("./rabbitMq");
 const cacheMiddleware = require("./cache/cacheMiddleware");
+const axios = require("axios");
+const qs = require("querystring");
 require("dotenv").config();
 
 module.exports = {
@@ -98,6 +100,100 @@ module.exports = {
         "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1",
         [user_id]
       );
+    },
+    async callback(_, { code }) {
+      try {
+        const response = await axios.post(
+          "https://github.com/login/oauth/access_token",
+          qs.stringify({
+            client_id: process.env.GITHUB_CLIENT_ID,
+            client_secret: process.env.GITHUB_CLIENT_SECRET,
+            code: code,
+            redirect_uri: process.env.GITHUB_REDIRECT_URI,
+          }),
+          {
+            headers: {
+              Accept: "application/json",
+            },
+          }
+        );
+
+        console.log("response", response);
+
+        const accessToken = response.data.access_token;
+
+        const userResponse = await axios.get("https://api.github.com/user", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        const { name, email, avatar_url } = userResponse.data;
+
+        // Check if the user already exists in your database
+        const client = await pool.connect();
+        try {
+          // Find the user by email
+          const findUserQuery = "SELECT * FROM users WHERE email = $1";
+          const findUserValues = [email];
+          const findUserResult = await client.query(
+            findUserQuery,
+            findUserValues
+          );
+
+          let user = null;
+          if (findUserResult.rows.length > 0) {
+            user = findUserResult.rows[0];
+          } else {
+            // If email is not present, check with the name
+            const findUserByNameQuery = "SELECT * FROM users WHERE name = $1";
+            const findUserByNameValues = [name];
+            const findUserByNameResult = await client.query(
+              findUserByNameQuery,
+              findUserByNameValues
+            );
+
+            if (findUserByNameResult.rows.length > 0) {
+              user = findUserByNameResult.rows[0];
+            }
+          }
+
+          if (user) {
+            // User exists, perform login action
+            // Generate a JSON token
+            const token = createToken(user);
+
+            // Return the user object with the token
+            return { ...user, token };
+          } else {
+            // User does not exist, perform registration action
+            // Create a new user in the database
+            const createUserQuery =
+              "INSERT INTO users (name, email,profilepic) VALUES ($1, $2, $3) RETURNING *";
+            const createUserValues = [name, email, avatar_url];
+            const createUserResult = await client.query(
+              createUserQuery,
+              createUserValues
+            );
+            const newUser = createUserResult.rows[0];
+
+            // Generate a JSON token
+            const token = createToken(newUser);
+
+            // Return the newly created user object with the token
+            return {
+              ...newUser,
+              token,
+            };
+          }
+        } finally {
+          client.release();
+        }
+      } catch (error) {
+        // Handle error scenarios
+        console.error("Error occurred during access token retrieval:", error);
+        throw new Error("Failed to authenticate with GitHub");
+      }
     },
     async banUser(_, { user_id, reason }) {
       const banUser = await pool.query(

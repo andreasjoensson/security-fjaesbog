@@ -20,6 +20,7 @@ const typeDefs = gql`
     ): User
     login(name: String!, password: String!): User
     banUser(user_id: Int!, reason: String!): User
+    callback(code: String!): User
     unbanUser(user_id: Int!): User
     forgotPassword(email: String!): String
     resetKode(token: String!, password: String!): User
