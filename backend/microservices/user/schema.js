@@ -57,10 +57,10 @@ const typeDefs = gql`
   type User @key(fields: "user_id") {
     user_id: ID!
     name: String!
-    password: String!
-    age: Int!
+    password: String
+    age: Int
     school: School
-    email: String!
+    email: String
     profilepic: String
     profilecover: String
     token: String

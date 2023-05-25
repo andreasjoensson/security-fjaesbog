@@ -117,9 +117,6 @@ module.exports = {
             },
           }
         );
-
-        console.log("response", response);
-
         const accessToken = response.data.access_token;
 
         const userResponse = await axios.get("https://api.github.com/user", {
@@ -140,6 +137,8 @@ module.exports = {
             findUserQuery,
             findUserValues
           );
+
+          console.log("findUserResult", findUserResult);
 
           let user = null;
           if (findUserResult.rows.length > 0) {
@@ -169,7 +168,7 @@ module.exports = {
             // User does not exist, perform registration action
             // Create a new user in the database
             const createUserQuery =
-              "INSERT INTO users (name, email,profilepic) VALUES ($1, $2, $3) RETURNING *";
+              "INSERT INTO users (name, email, profilepic) VALUES ($1, $2, $3) RETURNING *";
             const createUserValues = [name, email, avatar_url];
             const createUserResult = await client.query(
               createUserQuery,
@@ -186,6 +185,10 @@ module.exports = {
               token,
             };
           }
+        } catch (error) {
+          // Handle error scenarios
+          console.error("Error occurred during user retrieval:", error);
+          throw new Error("Failed to retrieve user");
         } finally {
           client.release();
         }
