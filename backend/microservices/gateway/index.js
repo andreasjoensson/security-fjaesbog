@@ -12,15 +12,15 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 
 const gateway = new ApolloGateway({
   serviceList: [
-    { name: "posts", url: "https://fjaesbog-posts.azurewebsites.net/graphql" },
+    { name: "posts", url: "http://localhost:4000/graphql" },
     {
       name: "community",
-      url: "https://fjaesbog-community.azurewebsites.net/graphql",
+      url: "http://localhost:1000/graphql",
     },
-    { name: "users", url: "https://fjaesbog-user.azurewebsites.net/graphql" },
+    { name: "users", url: "http://localhost:2000/graphql" },
     {
       name: "reactions",
-      url: "https://fjaesbog-reactions.azurewebsites.net/graphql",
+      url: "http://localhost:5500/graphql",
     },
   ],
   buildService({ name, url }) {
