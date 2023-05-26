@@ -1,11 +1,4 @@
-import {
-  CommentOutlined,
-  Send,
-  ThumbDown,
-  ThumbsUpDown,
-  ThumbUp,
-  ThumbUpSharp,
-} from "@material-ui/icons";
+import { CommentOutlined } from "@material-ui/icons";
 import Dislike from "../Reactions/Dislike";
 import Like from "../Reactions/Like";
 import { useEffect } from "react";
@@ -17,9 +10,9 @@ import Comments from "../Comments/Comments";
 import moment from "moment";
 import "moment/locale/da";
 import { EmojiEmotionsOutlined } from "@material-ui/icons";
-import { Delete } from "@material-ui/icons";
 import DeletePost from "../DeletePost/DeletePost";
 import PostButtons from "../PostStatus/PostStatus";
+import DOMPurify from "dompurify";
 
 function Post({
   post_id,
@@ -116,7 +109,7 @@ function Post({
           <img src={profilePic} alt="" className="postProfilePic" />
         </div>
         <div className="postUserInformation">
-          <h3>{name}</h3>
+          <h3>{DOMPurify.sanitize(name)}</h3>
           <span>{moment(createdAt).fromNow()}</span>
         </div>
         {user.name == name ? <DeletePost id={post_id} /> : <p></p>}
@@ -130,8 +123,8 @@ function Post({
         />
       </div>
       <div className="postContent">
-        <h3>{title}</h3>
-        <p>{text}</p>
+        <h3>{DOMPurify.sanitize(title)}</h3>
+        <p>{DOMPurify.sanitize(text)}</p>
         {image !== "" || "" ? (
           <img src={image} className="postPicture" />
         ) : (

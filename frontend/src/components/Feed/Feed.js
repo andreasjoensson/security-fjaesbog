@@ -1,14 +1,12 @@
 import { ExitToApp, ExpandMoreOutlined, Search } from "@material-ui/icons";
 import "./feed.css";
-import { Image } from "@material-ui/icons";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { useState } from "react";
-import { Send } from "@material-ui/icons";
 import Post from "../Post/Post";
 import { useContext } from "react";
 import { useHistory } from "react-router";
 import { AuthContext } from "../../context/auth";
 import CreatePost from "../createPost/CreatePost";
+import DOMPurify from "dompurify";
 
 function Feed() {
   const { logout, user } = useContext(AuthContext);
@@ -99,16 +97,16 @@ function Feed() {
 
             {data?.getPosts.map((post) => (
               <Post
-                key={post.post_id}
-                post_id={post.post_id}
-                createdAt={post.created_at}
-                name={post.name}
-                profilePic={post.profilepic}
-                title={post.title}
-                user_id={post.user_id}
-                text={post.text}
-                private_post={post.isprivate}
-                image={post?.image}
+                key={DOMPurify.sanitize(post.post_id)}
+                post_id={DOMPurify.sanitize(post.post_id)}
+                createdAt={DOMPurify.sanitize(post.created_at)}
+                name={DOMPurify.sanitize(post.name)}
+                profilePic={DOMPurify.sanitize(post.profilepic)}
+                title={DOMPurify.sanitize(post.title)}
+                user_id={DOMPurify.sanitize(post.user_id)}
+                text={DOMPurify.sanitize(post.text)}
+                private_post={DOMPurify.sanitize(post.isprivate)}
+                image={DOMPurify.sanitize(post?.image)}
                 makePostPublic={makePostPublic}
                 makePostPrivate={makePostPrivate}
               />

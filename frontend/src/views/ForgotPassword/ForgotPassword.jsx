@@ -1,9 +1,9 @@
 import "./forgotpassword.css";
 import logo from "../../assets/logo.png";
 import { AccountCircleOutlined, MailOutline } from "@material-ui/icons";
-import { useState, useContext } from "react";
-import Spline from "@splinetool/react-spline";
+import { useState } from "react";
 import axios from "axios";
+import joebiden from "../../assets/jodebiden.png";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -70,7 +70,9 @@ export default function ForgotPassword() {
           )}
         </div>
       </div>
-      <Spline scene="https://prod.spline.design/EGL1Gl-a6rBSjdC8/scene.splinecode" />
+      <div className="col-6 spline-scene">
+        <img className="spline-image" src={joebiden} />
+      </div>
     </div>
   );
 }

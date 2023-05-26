@@ -2,9 +2,7 @@ import "./sidebar.css";
 import logo from "../../assets/logo.png";
 import {
   AssessmentRounded,
-  FaceOutlined,
   ForumOutlined,
-  SchoolOutlined,
   SearchOutlined,
 } from "@material-ui/icons";
 import { gql, useQuery } from "@apollo/client";
@@ -12,12 +10,12 @@ import { CopyrightOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { AccountCircleOutlined } from "@material-ui/icons";
-import { Redirect, useHistory } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/auth";
+import DOMPurify from "dompurify";
+
 function Sidebar({ currentPage }) {
   const { user } = useContext(AuthContext);
-  const history = useHistory();
 
   const GET_COMMUNITIES_QUERY = gql`
     query GetCommunitiesByUser {
@@ -104,15 +102,20 @@ function Sidebar({ currentPage }) {
             </li>
           </Link>
           {data?.getCommunitiesByUser.map((community) => (
-            <Link to={`/forum/${community.name}`}>
+            <Link to={`/forum/${DOMPurify.sanitize(community.name)}`}>
               <li
                 className={`sidebarItem ${
-                  currentPage == community.name ? "active" : ""
+                  currentPage == DOMPurify.sanitize(community.name)
+                    ? "active"
+                    : ""
                 }`}
               >
                 <div className="active-line"></div>
-                <img className="sidebarIcon" src={community.profilepic} />
-                <p>{community.name}</p>
+                <img
+                  className="sidebarIcon"
+                  src={DOMPurify.sanitize(community.profilepic)}
+                />
+                <p>{DOMPurify.sanitize(community.name)}</p>
               </li>
             </Link>
           ))}

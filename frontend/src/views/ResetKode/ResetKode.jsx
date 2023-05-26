@@ -3,7 +3,6 @@ import { Lock } from "@material-ui/icons";
 import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import "./ResetKode.css";
-import Spline from "@splinetool/react-spline";
 import axios from "axios";
 
 export default function ResetKode() {
@@ -83,7 +82,12 @@ export default function ResetKode() {
           )}
         </div>
       </div>
-      <Spline scene="https://prod.spline.design/EGL1Gl-a6rBSjdC8/scene.splinecode" />
+      <div className="col-6 spline-scene">
+        <img
+          className="spline-image"
+          src={require("../../assets/jodebiden.png")}
+        />
+      </div>
     </div>
   );
 }
