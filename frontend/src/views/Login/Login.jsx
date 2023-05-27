@@ -44,6 +44,7 @@ export default function Login() {
       }
     },
     onError(err) {
+      console.log("errr", err);
       setLoading(false);
       setErrors(err.graphQLErrors[0].extensions.errors);
     },

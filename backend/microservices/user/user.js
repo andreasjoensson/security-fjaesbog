@@ -2,36 +2,33 @@ const pool = require("./database/db");
 const bcrypt = require("bcryptjs");
 const createToken = require("./auth/createToken");
 const { UserInputError } = require("apollo-server");
-const checkAuth = require("./auth/checkAuth");
 const { validateLoginInput } = require("./validations");
-const amqp = require("amqplib/callback_api");
 const { newUserCreatedMessage } = require("./rabbitMq");
 const cacheMiddleware = require("./cache/cacheMiddleware");
 const axios = require("axios");
 const qs = require("querystring");
+const sanitize = require("xss");
+const validator = require("email-validator");
 require("dotenv").config();
 
 module.exports = {
   Query: {
     getProfile: cacheMiddleware(async (_, { name }) => {
+      const sanitizedName = sanitize(name);
       const activeUser = await pool.query(
         "SELECT * FROM users WHERE name = $1 AND deleted_at IS NULL",
-        [name]
+        [sanitizedName]
       );
-
-      console.log("activeUser", activeUser);
 
       if (!activeUser) {
         return {
           error: "Bruger ikke fundet",
         };
-        console.log("oh nooo");
       }
 
       const schoolQuery = await pool.query("SELECT * FROM school WHERE id=$1", [
         activeUser.rows[0].school,
       ]);
-      console.log("oh dsanooo");
 
       let school = schoolQuery.rows[0];
 
@@ -96,19 +93,21 @@ module.exports = {
   },
   Mutation: {
     async deleteUser(_, { user_id }) {
+      const sanitizedId = sanitize(user_id);
       await pool.query(
         "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1",
-        [user_id]
+        [sanitizedId]
       );
     },
     async callback(_, { code }) {
+      const sanitizedCode = sanitize(code);
       try {
         const response = await axios.post(
           "https://github.com/login/oauth/access_token",
           qs.stringify({
             client_id: process.env.GITHUB_CLIENT_ID,
             client_secret: process.env.GITHUB_CLIENT_SECRET,
-            code: code,
+            code: sanitizedCode,
             redirect_uri: process.env.GITHUB_REDIRECT_URI,
           }),
           {
@@ -137,8 +136,6 @@ module.exports = {
             findUserQuery,
             findUserValues
           );
-
-          console.log("findUserResult", findUserResult);
 
           let user = null;
           if (findUserResult.rows.length > 0) {
@@ -228,6 +225,13 @@ module.exports = {
       let errors = {};
       password = await bcrypt.hash(password, 12);
 
+      if (!validator.validate(email)) {
+        throw new UserInputError(
+          "Den e-mail du har brugt er ikke en gyldig e-mail...",
+          { errors }
+        );
+      }
+
       const schoolInsert = await pool.query(
         "INSERT INTO school(name,logo) VALUES($1,$2) RETURNING id",
         [school.Navn, school.Logo]
@@ -235,27 +239,22 @@ module.exports = {
 
       let now = new Date(); //getting current date
       let currentY = now.getFullYear(); //extracting year from the date
-      let currentM = now.getMonth(); //extracting month from the date
-
       var dob = new Date(age); //formatting input as date
       var prevY = dob.getFullYear(); //extracting year from input date
-      var prevM = dob.getMonth(); //extracting month from input date
-
       var ageY = currentY - prevY;
-      var ageM = Math.abs(currentM - prevM); //converting any negative value to positive
 
       const res = await pool.query(
         "INSERT INTO users(name, email, age, password, school, profilepic, profilecover, created_at, role) VALUES($1,$2,$3,$4,$5,$6, $7, $8, $9) RETURNING *",
         [
-          name,
-          email,
-          ageY,
-          password,
-          schoolInsert.rows[0].id,
-          profilePic,
-          profileCover,
-          new Date().toISOString().slice(0, 19).replace("T", " "),
-          "USER",
+          sanitize(name),
+          sanitize(email),
+          sanitize(ageY),
+          sanitize(password),
+          sanitize(schoolInsert.rows[0].id),
+          sanitize(profilePic),
+          sanitize(profileCover),
+          sanitize(new Date().toISOString().slice(0, 19).replace("T", " ")),
+          sanitize("USER"),
         ]
       );
 
@@ -268,14 +267,19 @@ module.exports = {
       };
     },
     async login(_, { name, password }) {
-      const { errors, valid } = validateLoginInput(name, password);
+      const sanitizedName = sanitize(name);
+      const sanitizedPassword = sanitize(password);
+      const { errors, valid } = validateLoginInput(
+        sanitizedName,
+        sanitizedPassword
+      );
 
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
 
       const user = await pool.query("SELECT * from users WHERE name = $1", [
-        name,
+        sanitizedName,
       ]);
 
       if (user.rows.length < 1) {
@@ -292,13 +296,15 @@ module.exports = {
     `;
 
       const isBanned = await pool.query(query, [user.rows[0].id]);
-      console.log("fds", isBanned.rows[0].exists);
       if (isBanned.rows[0].exists) {
         errors.general = "Du er blevet banned fra den her platform!";
         throw new UserInputError("Du er blevet banned", { errors });
       }
 
-      const match = await bcrypt.compare(password, user.rows[0].password);
+      const match = await bcrypt.compare(
+        sanitizedPassword,
+        user.rows[0].password
+      );
       if (!match) {
         errors.general = "Forkert kode";
         throw new UserInputError("Forkert kode", { errors });

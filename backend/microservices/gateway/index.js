@@ -1,8 +1,13 @@
-const { ApolloServer } = require("apollo-server");
+const express = require("express");
+const { ApolloServer } = require("apollo-server-express");
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
+const cookieParser = require("cookie-parser");
+const { v4: uuidv4 } = require("uuid");
+const cors = require("cors");
+const session = require("express-session");
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
-  async willSendRequest({ request, context }) {
+  willSendRequest({ request, context }) {
     // Pass the user from the gateway context to the microservices by setting a header
     if (context.user) {
       request.http.headers.set("authorization", context.user);
@@ -28,15 +33,42 @@ const gateway = new ApolloGateway({
   },
 });
 
-const server = new ApolloServer({
-  gateway,
-  subscriptions: false,
-  context: ({ req }) => {
-    const user = req.headers.authorization; // Extract the user from the authorization header
-    return { user }; // Return the user as part of the context
-  },
-});
+const startServer = async () => {
+  const app = express();
+  app.use(cookieParser());
 
-server.listen({ port: 9000 }).then(({ url }) => {
-  console.log(`🚀 Gateway ready at ${url}`);
+  app.use(
+    cors({
+      origin: 'https://zucc.dk, "http://localhost:3000',
+      methods: ["GET", "POST", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    })
+  );
+
+  // Apollo Server
+  const server = new ApolloServer({
+    gateway,
+    subscriptions: false,
+    context: ({ req }) => {
+      const user = req.headers.authorization; // Extract the user from the authorization header
+
+      return { user }; // Return the user and CSRF token as part of the context
+    },
+  });
+
+  await server.start();
+
+  server.applyMiddleware({ app });
+
+  app.listen({ port: 9000 }, () => {
+    console.log(
+      `🚀 Gateway ready at http://localhost:9000${server.graphqlPath}`
+    );
+  });
+};
+
+startServer().catch((err) => {
+  console.error(err);
+  process.exit(1);
 });

@@ -51,6 +51,7 @@ export default function RegisterStepThree({
                 <input
                   id="file-input-cover"
                   type="file"
+                  accept="image/*"
                   onChange={(e) => addProfileCover(e)}
                 />
               </div>
@@ -62,6 +63,7 @@ export default function RegisterStepThree({
                   <input
                     id="file-input"
                     type="file"
+                    accept="image/*"
                     onChange={(e) => addProfilePic(e)}
                   />
                 </div>
