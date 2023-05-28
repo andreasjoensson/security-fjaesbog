@@ -5,6 +5,7 @@ const {
 const checkAuth = require("./auth/checkAuth");
 const pool = require("./database/db");
 const cacheMiddleware = require("./cache/cacheMiddleware");
+const sanitize = require("xss");
 
 module.exports = {
   Query: {
@@ -17,16 +18,20 @@ module.exports = {
       );
       return res.rows;
     },
-    getPostsFromUser: cacheMiddleware(async (_, { name }) => {
+    getPostsFromUser: cacheMiddleware(async (_, { name }, context) => {
+      const user = checkAuth(context);
+      const sanitizedName = sanitize(name);
+
       let posts = await pool.query("SELECT * FROM posts WHERE name = $1", [
-        name,
+        sanitizedName,
       ]);
       return posts.rows;
     }),
-    getCommunityPosts: async (_, { name }) => {
-      //kald på anden microservice
+    getCommunityPosts: async (_, { name }, context) => {
+      const user = checkAuth(context);
+      const sanitizedName = sanitize(name);
       try {
-        const communityId = await getCommunityByIdName(name);
+        const communityId = await getCommunityByIdName(sanitizedName);
         console.log(`Community ID: ${communityId}`);
         const posts = await pool.query(
           "SELECT * FROM posts WHERE community_id = $1",
@@ -50,17 +55,17 @@ module.exports = {
           "INSERT INTO posts(user_id, title, text, image, created_at, name, profilepic, community_id) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *",
           [
             user.user_id,
-            title,
-            text,
-            image,
+            sanitize(title),
+            sanitize(text),
+            sanitize(image),
             new Date().toISOString().slice(0, 19).replace("T", " "),
             user.name,
             user.profilepic,
-            community_id,
+            sanitize(community_id),
           ]
         );
 
-        createPostMessage(community_id, res.rows[0].id);
+        createPostMessage(sanitize(community_id), res.rows[0].id);
 
         await client.query("COMMIT"); // Commit transaction
 
@@ -78,10 +83,11 @@ module.exports = {
     },
     makePostPrivate: async (_, { post_id }, context) => {
       const user = checkAuth(context);
+      const sanitizedPostId = sanitize(post_id);
 
       //if user is not the owner of the post
       const post = await pool.query("SELECT * FROM posts WHERE post_id = $1", [
-        post_id,
+        sanitizedPostId,
       ]);
 
       if (post.rows[0].user_id !== user.user_id) {
@@ -89,7 +95,7 @@ module.exports = {
       } else {
         await pool.query(
           "UPDATE posts SET isPrivate = true WHERE post_id = $1 RETURNING *",
-          [post_id]
+          [sanitizedPostId]
         );
       }
 
@@ -97,10 +103,11 @@ module.exports = {
     },
     makePostPublic: async (_, { post_id }, context) => {
       const user = checkAuth(context);
+      const sanitizedPostId = sanitize(post_id);
 
       //if user is not the owner of the post
       const post = await pool.query("SELECT * FROM posts WHERE post_id = $1", [
-        post_id,
+        sanitizedPostId,
       ]);
 
       if (post.rows[0].user_id !== user.user_id) {
@@ -108,18 +115,29 @@ module.exports = {
       } else {
         await pool.query(
           "UPDATE posts SET isPrivate = false WHERE post_id = $1 RETURNING *",
-          [post_id]
+          [sanitizedPostId]
         );
       }
 
       return post.rows[0];
     },
-    async deletePost(_, { post_id }) {
-      const post = await pool.query(
-        "DELETE FROM posts WHERE post_id = $1 RETURNING*",
-        [post_id]
+    async deletePost(_, { post_id }, context) {
+      const sanitizedPostId = sanitize(post_id);
+      const user = checkAuth(context);
+      const postAuthor = await pool.query(
+        "SELECT * FROM posts WHERE post_id = $1",
+        [sanitizedPostId]
       );
-      return post.rows[0];
+
+      if (postAuthor.rows[0].user_id !== user.user_id) {
+        throw new Error("You are not the owner of this post");
+      } else {
+        const post = await pool.query(
+          "DELETE FROM posts WHERE post_id = $1 RETURNING*",
+          [sanitizedPostId]
+        );
+        return post.rows[0];
+      }
     },
   },
 };

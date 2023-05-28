@@ -21,6 +21,7 @@
     "morgan": "~1.9.1",
     "pg": "^8.11.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^4.6.3"
+    "swagger-ui-express": "^4.6.3",
+    "xss": "^1.0.14"
   }
 }
