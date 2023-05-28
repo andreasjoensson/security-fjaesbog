@@ -29,24 +29,6 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG ./backend/microservices/user
-          docker push fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG
-
-          docker build -t fjaesbogsecurity.azurecr.io/community:$IMAGE_TAG ./backend/microservices/community
-          docker push fjaesbogsecurity.azurecr.io/community:$IMAGE_TAG 
-
-          docker build -t fjaesbogsecurity.azurecr.io/email:$IMAGE_TAG ./backend/microservices/email
-          docker push fjaesbogsecurity.azurecr.io/email:$IMAGE_TAG 
-
-          docker build -t fjaesbogsecurity.azurecr.io/posts:$IMAGE_TAG ./backend/microservices/posts
-          docker push fjaesbogsecurity.azurecr.io/posts:$IMAGE_TAG 
-
-          docker build -t fjaesbogsecurity.azurecr.io/reactions:$IMAGE_TAG ./backend/microservices/reactions
-          docker push fjaesbogsecurity.azurecr.io/reactions:$IMAGE_TAG 
-
-          docker build -t fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG ./backend/microservices/user
-          docker push fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG 
-
           docker build -t fjaesbogsecurity.azurecr.io/gateway:$IMAGE_TAG ./backend/microservices/gateway
           docker push fjaesbogsecurity.azurecr.io/gateway:$IMAGE_TAG
 
