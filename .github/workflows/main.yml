@@ -1,0 +1,95 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: fjaesbogsecurity.azurecr.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build and Push Docker Images
+        env:
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG ./backend/microservices/user
+          docker push fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG
+
+          docker build -t fjaesbogsecurity.azurecr.io/community:$IMAGE_TAG ./backend/microservices/community
+          docker push fjaesbogsecurity.azurecr.io/community:$IMAGE_TAG 
+
+          docker build -t fjaesbogsecurity.azurecr.io/email:$IMAGE_TAG ./backend/microservices/email
+          docker push fjaesbogsecurity.azurecr.io/email:$IMAGE_TAG 
+
+          docker build -t fjaesbogsecurity.azurecr.io/posts:$IMAGE_TAG ./backend/microservices/posts
+          docker push fjaesbogsecurity.azurecr.io/posts:$IMAGE_TAG 
+
+          docker build -t fjaesbogsecurity.azurecr.io/reactions:$IMAGE_TAG ./backend/microservices/reactions
+          docker push fjaesbogsecurity.azurecr.io/reactions:$IMAGE_TAG 
+
+          docker build -t fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG ./backend/microservices/user
+          docker push fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG 
+
+          docker build -t fjaesbogsecurity.azurecr.io/gateway:$IMAGE_TAG ./backend/microservices/gateway
+          docker push fjaesbogsecurity.azurecr.io/gateway:$IMAGE_TAG
+
+      - name: SSH to Ubuntu Server and Run Microservices
+        uses: appleboy/ssh-action@master
+        with:
+          host: 20.228.199.140
+          username: azureuser
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            echo "${{ secrets.SSH_PRIVATE_KEY }}" > ssh_key.pem
+            chmod 600 ssh_key.pem
+
+            ssh -i ssh_key.pem azureuser@20.228.199.140 '
+            docker stop user-service || true
+            docker rm user-service || true
+            docker pull fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG
+            docker run -d --name user-service fjaesbogsecurity.azurecr.io/user:$IMAGE_TAG
+
+            docker stop community-service || true
+            docker rm community-service || true
+            docker pull fjaesbogsecurity.azurecr.io/community:$IMAGE_TAG
+            docker run -d --name community-service fjaesbogsecurity.azurecr.io/community:$IMAGE_TAG
+
+            docker stop email-service || true
+            docker rm email-service || true
+            docker pull fjaesbogsecurity.azurecr.io/email:$IMAGE_TAG
+            docker run -d --name email-service fjaesbogsecurity.azurecr.io/email:$IMAGE_TAG
+
+            docker stop posts-service || true
+            docker rm posts-service || true
+            docker pull fjaesbogsecurity.azurecr.io/posts:$IMAGE_TAG
+            docker run -d --name posts-service fjaesbogsecurity.azurecr.io/posts:$IMAGE_TAG
+
+            docker stop reactions-service || true
+            docker rm reactions-service || true
+            docker pull fjaesbogsecurity.azurecr.io/reactions:$IMAGE_TAG
+            docker run -d --name reactions-service fjaesbogsecurity.azurecr.io/reactions:$IMAGE_TAG
+
+            docker stop gateway-service || true
+            docker rm gateway-service || true
+            docker pull fjaesbogsecurity.azurecr.io/gateway:$IMAGE_TAG
+            docker run -d --name gateway-service fjaesbogsecurity.azurecr.io/gateway:$IMAGE_TAG
+            '
+
+            rm ssh_key.pem
