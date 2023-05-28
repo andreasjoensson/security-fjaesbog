@@ -19,4 +19,31 @@ async function getAllUserEmails() {
   }
 }
 
-module.exports = { getAllUsers, getAllUserEmails };
+// Function to check if a username is taken
+async function isUsernameTaken(username) {
+  const query = {
+    text: "SELECT EXISTS (SELECT 1 FROM users WHERE name = $1) AS username_taken;",
+    values: [username],
+  };
+
+  const result = await pool.query(query);
+  return result.rows[0].username_taken;
+}
+
+// Function to check if an email is taken
+async function isEmailTaken(email) {
+  const query = {
+    text: "SELECT EXISTS (SELECT 1 FROM users WHERE email = $1) AS email_taken;",
+    values: [email],
+  };
+
+  const result = await pool.query(query);
+  return result.rows[0].email_taken;
+}
+
+module.exports = {
+  getAllUsers,
+  getAllUserEmails,
+  isUsernameTaken,
+  isEmailTaken,
+};

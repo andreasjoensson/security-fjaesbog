@@ -2,9 +2,7 @@ const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
 const cookieParser = require("cookie-parser");
-const { v4: uuidv4 } = require("uuid");
 const cors = require("cors");
-const session = require("express-session");
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   willSendRequest({ request, context }) {
@@ -39,7 +37,7 @@ const startServer = async () => {
 
   app.use(
     cors({
-      origin: 'https://zucc.dk, "http://localhost:3000',
+      origin: "*",
       methods: ["GET", "POST", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,

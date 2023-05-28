@@ -9,94 +9,121 @@ const axios = require("axios");
 const qs = require("querystring");
 const sanitize = require("xss");
 const validator = require("email-validator");
+const checkAuth = require("./auth/checkAuth");
+const { isEmailTaken, isUsernameTaken } = require("./util");
 require("dotenv").config();
 
 module.exports = {
   Query: {
-    getProfile: cacheMiddleware(async (_, { name }) => {
+    getProfile: cacheMiddleware(async (_, { name }, context) => {
+      const user = checkAuth(context);
       const sanitizedName = sanitize(name);
-      const activeUser = await pool.query(
-        "SELECT * FROM users WHERE name = $1 AND deleted_at IS NULL",
-        [sanitizedName]
-      );
 
-      if (!activeUser) {
+      if (user.name == sanitizedName) {
+        const activeUser = await pool.query(
+          "SELECT * FROM users WHERE name = $1 AND deleted_at IS NULL",
+          [sanitizedName]
+        );
+
+        if (!activeUser) {
+          return {
+            error: "Bruger ikke fundet",
+          };
+        }
+
+        const schoolQuery = await pool.query(
+          "SELECT * FROM school WHERE id=$1",
+          [activeUser.rows[0].school]
+        );
+
+        let school = schoolQuery.rows[0];
+
         return {
-          error: "Bruger ikke fundet",
+          ...activeUser.rows[0],
+          school,
+        };
+      } else {
+        return {
+          error: "Du har ikke adgang til denne profil",
         };
       }
-
-      const schoolQuery = await pool.query("SELECT * FROM school WHERE id=$1", [
-        activeUser.rows[0].school,
-      ]);
-
-      let school = schoolQuery.rows[0];
-
-      return {
-        ...activeUser.rows[0],
-        school,
-      };
     }),
-    getDashboardStats: async () => {
-      const allUsers = await pool.query("SELECT * FROM users");
+    getDashboardStats: async (_, {}, context) => {
+      const user = checkAuth(context);
 
-      // Hent nye brugere i dag
-      const today = new Date().toISOString().split("T")[0];
+      if (user.role == "ADMIN") {
+        const allUsers = await pool.query("SELECT * FROM users");
 
-      // Query to retrieve users created today
-      const queryToday = `
+        // Hent nye brugere i dag
+        const today = new Date().toISOString().split("T")[0];
+
+        // Query to retrieve users created today
+        const queryToday = `
         SELECT *
         FROM users
         WHERE TO_TIMESTAMP(created_at, 'YYYY-MM-DD HH24:MI:SS')::DATE = $1;
       `;
-      const todaysNewUsers = await pool.query(queryToday, [today]);
+        const todaysNewUsers = await pool.query(queryToday, [today]);
 
-      // Get the date one week ago from the current date
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      const formattedOneWeekAgo = oneWeekAgo.toISOString().split("T")[0];
+        // Get the date one week ago from the current date
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        const formattedOneWeekAgo = oneWeekAgo.toISOString().split("T")[0];
 
-      const queryLastWeek = `
+        const queryLastWeek = `
       SELECT *
       FROM users
       WHERE TO_TIMESTAMP(created_at, 'YYYY-MM-DD HH24:MI:SS')::DATE >= $1;
     `;
 
-      const bannedUsers = await pool.query(
-        "SELECT u.user_id, u.name, u.profilepic, b.reason FROM users u INNER JOIN banlist b ON u.user_id = b.user_id"
-      );
+        const bannedUsers = await pool.query(
+          "SELECT u.user_id, u.name, u.profilepic, b.reason FROM users u INNER JOIN banlist b ON u.user_id = b.user_id"
+        );
 
-      console.log("bannedUsers", bannedUsers.rows);
+        const lastWeeksNewUsers = await pool.query(queryLastWeek, [
+          formattedOneWeekAgo,
+        ]);
 
-      const lastWeeksNewUsers = await pool.query(queryLastWeek, [
-        formattedOneWeekAgo,
-      ]);
-
-      return {
-        dailyNewUsers: todaysNewUsers.rows.length,
-        weeklyNewUsers: lastWeeksNewUsers.rows.length,
-        totalUsers: allUsers.rows.length,
-        bannedUsers: bannedUsers.rows,
-        topCommunity: [
-          { name: "velkomstgruppe", members: 100 },
-          { name: "bitcoin", members: 30 },
-          { name: "cykling", members: 20 },
-        ],
-      };
+        return {
+          dailyNewUsers: todaysNewUsers.rows.length,
+          weeklyNewUsers: lastWeeksNewUsers.rows.length,
+          totalUsers: allUsers.rows.length,
+          bannedUsers: bannedUsers.rows,
+          topCommunity: [
+            { name: "velkomstgruppe", members: 100 },
+            { name: "bitcoin", members: 30 },
+            { name: "cykling", members: 20 },
+          ],
+        };
+      } else {
+        return {
+          error: "Du har ikke admin adgang til denne side",
+        };
+      }
     },
-    getUsers: async () => {
-      const query =
-        "SELECT u.*, CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END AS banned, b.reason AS ban_reason FROM users u LEFT JOIN banlist b ON u.user_id = b.user_id";
-      const getUsers = await pool.query(query);
-      return getUsers.rows;
+    getUsers: async (_, {}, context) => {
+      const user = checkAuth(context);
+
+      if (user) {
+        const query =
+          "SELECT u.*, CASE WHEN b.user_id IS NOT NULL THEN true ELSE false END AS banned, b.reason AS ban_reason FROM users u LEFT JOIN banlist b ON u.user_id = b.user_id";
+        const getUsers = await pool.query(query);
+        return getUsers.rows;
+      } else {
+        return {
+          error: "Du har ikke adgang til denne side",
+        };
+      }
     },
   },
   Mutation: {
-    async deleteUser(_, { user_id }) {
-      const sanitizedId = sanitize(user_id);
+    async deleteUser(_, {}, context) {
+      const user = checkAuth(context);
+
+      //Bruger må kun slette deres egen bruger.
       await pool.query(
         "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = $1",
-        [sanitizedId]
+        [user.id]
       );
     },
     async callback(_, { code }) {
@@ -195,19 +222,31 @@ module.exports = {
         throw new Error("Failed to authenticate with GitHub");
       }
     },
-    async banUser(_, { user_id, reason }) {
-      const banUser = await pool.query(
-        "INSERT INTO banlist(user_id,reason) VALUES($1,$2)",
-        [user_id, reason]
-      );
-      return banUser.rows[0];
+    async banUser(_, { user_id, reason }, context) {
+      const user = checkAuth(context);
+
+      if (user.role == "ADMIN") {
+        const banUser = await pool.query(
+          "INSERT INTO banlist(user_id,reason) VALUES($1,$2)",
+          [user_id, reason]
+        );
+        return banUser.rows[0];
+      } else {
+        throw new Error("Du har ikke rettigheder til at banne brugere");
+      }
     },
-    async unbanUser(_, { user_id }) {
-      const unbanUserQuery = await pool.query(
-        "DELETE FROM banlist WHERE user_id = $1",
-        [user_id]
-      );
-      return unbanUserQuery.rows[0];
+    async unbanUser(_, { user_id }, context) {
+      const user = checkAuth(context);
+
+      if (user.role == "ADMIN") {
+        const unbanUserQuery = await pool.query(
+          "DELETE FROM banlist WHERE user_id = $1",
+          [user_id]
+        );
+        return unbanUserQuery.rows[0];
+      } else {
+        throw new Error("Du har ikke rettigheder til at unbanne brugere");
+      }
     },
     async createUser(
       _,
@@ -228,6 +267,24 @@ module.exports = {
       if (!validator.validate(email)) {
         throw new UserInputError(
           "Den e-mail du har brugt er ikke en gyldig e-mail...",
+          { errors }
+        );
+      }
+
+      if (password !== confirmPassword) {
+        throw new UserInputError("Adgangskoderne er ikke ens...", { errors });
+      }
+
+      if (isEmailTaken(sanitize(email))) {
+        throw new UserInputError(
+          "Emailen bliver allerede brugt af en anden bruger...",
+          { errors }
+        );
+      }
+
+      if (isUsernameTaken(sanitize(name))) {
+        throw new UserInputError(
+          "Brugernavnet bliver allerede brugt af en anden bruger...",
           { errors }
         );
       }

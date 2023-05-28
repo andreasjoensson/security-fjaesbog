@@ -3,7 +3,7 @@ const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./schema");
 const resolvers = require("./user");
 const { buildFederatedSchema } = require("@apollo/federation");
-const { v4: uuidv4 } = require("uuid");
+
 const {
   listenForUsersRequest,
   listenForUserListRequest,

@@ -2,10 +2,10 @@ const redis = require("redis");
 require("dotenv").config(); // Load environment variables from .env file
 
 const redisClient = redis.createClient({
-  password: "ryKmjWL30ZWF2VeI9MiNpF7hBTZrmzw7",
+  password: process.env.REDIS_PASSWORD,
   socket: {
-    host: "redis-16972.c263.us-east-1-2.ec2.cloud.redislabs.com",
-    port: 16972,
+    host: process.env.REDIS_URL,
+    port: process.env.REDIS_PORT,
   },
 });
 
@@ -15,9 +15,7 @@ const redisClient = redis.createClient({
 })();
 
 const getRedisAsync = async (key) => {
-  console.log("yeeeeeee");
   const value = await redisClient.get(key);
-  console.log("value", value);
   return value;
 };
 const setRedisAsync = async (key, value) => {

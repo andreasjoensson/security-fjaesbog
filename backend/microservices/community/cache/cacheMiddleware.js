@@ -1,9 +1,4 @@
-const {
-  getRedisAsync,
-  setRedisAsync,
-  onConnectCallback,
-  redisClient,
-} = require("./redis");
+const { getRedisAsync, setRedisAsync } = require("./redis");
 
 function cacheMiddleware(resolverFunction) {
   return async (parent, args, context, info) => {
