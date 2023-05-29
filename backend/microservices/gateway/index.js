@@ -1,8 +1,6 @@
 const express = require("express");
 const { ApolloServer } = require("apollo-server-express");
 const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
-const cookieParser = require("cookie-parser");
-const cors = require("cors");
 
 class AuthenticatedDataSource extends RemoteGraphQLDataSource {
   willSendRequest({ request, context }) {
@@ -33,16 +31,6 @@ const gateway = new ApolloGateway({
 
 const startServer = async () => {
   const app = express();
-  app.use(cookieParser());
-
-  app.use(
-    cors({
-      origin: "*",
-      methods: ["GET", "POST", "DELETE"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-      credentials: true,
-    })
-  );
 
   // Apollo Server
   const server = new ApolloServer({
