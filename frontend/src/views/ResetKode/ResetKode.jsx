@@ -22,7 +22,7 @@ export default function ResetKode() {
 
     try {
       const response = await axios.post(
-        "http://localhost:1040/password/reset",
+        "http://20.228.199.140:1040/password/reset",
         { password, token }
       );
       console.log("response", response);

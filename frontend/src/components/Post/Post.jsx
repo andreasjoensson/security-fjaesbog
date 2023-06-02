@@ -1,4 +1,4 @@
-import { CommentOutlined } from "@material-ui/icons";
+import { CommentOutlined, Send } from "@material-ui/icons";
 import Dislike from "../Reactions/Dislike";
 import Like from "../Reactions/Like";
 import { useEffect } from "react";
@@ -13,6 +13,7 @@ import { EmojiEmotionsOutlined } from "@material-ui/icons";
 import DeletePost from "../DeletePost/DeletePost";
 import PostButtons from "../PostStatus/PostStatus";
 import DOMPurify from "dompurify";
+import CommunityFeat from "../CommunityFeat/CommunityFeat";
 
 function Post({
   post_id,
@@ -23,6 +24,7 @@ function Post({
   text,
   user_id,
   image,
+  community_id,
   private_post,
   makePostPublic,
   makePostPrivate,
@@ -104,6 +106,14 @@ function Post({
 
   return (
     <div className="post">
+      <div className="post-top-bar">
+        {community_id == null || parseInt(community_id) <= 0 ? (
+          "Postet på egen profil"
+        ) : (
+          <CommunityFeat community_id={community_id} />
+        )}
+      </div>
+      <hr></hr>
       <div className="postUser">
         <div className="postUserImage">
           <img src={profilePic} alt="" className="postProfilePic" />
@@ -112,6 +122,7 @@ function Post({
           <h3>{DOMPurify.sanitize(name)}</h3>
           <span>{moment(createdAt).fromNow()}</span>
         </div>
+
         {user.name == name ? <DeletePost id={post_id} /> : <p></p>}
         <PostButtons
           user_id={user.user_id}
@@ -160,11 +171,7 @@ function Post({
           placeholder="Skriv din kommentar"
           onChange={(e) => setComment(e.target.value)}
         />
-        <EmojiEmotionsOutlined
-          className="sendComment"
-          color="disabled"
-          onClick={sendMessage}
-        />
+        <Send className="sendComment" color="disabled" onClick={sendMessage} />
       </div>
       <Comments post_id={post_id} />
     </div>

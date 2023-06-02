@@ -1,0 +1,14 @@
+.loadingBg {
+  height: 100vh;
+}
+
+.large-loading {
+  width: 3rem;
+  height: 3rem;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: space-evenly;
+  width: 300px;
+}

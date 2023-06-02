@@ -18,7 +18,7 @@ module.exports = {
       );
       return res.rows;
     },
-    getPostsFromUser: cacheMiddleware(async (_, { name }, context) => {
+    getPostsFromUser: async (_, { name }, context) => {
       const user = checkAuth(context);
       const sanitizedName = sanitize(name);
 
@@ -26,7 +26,7 @@ module.exports = {
         sanitizedName,
       ]);
       return posts.rows;
-    }),
+    },
     getCommunityPosts: async (_, { name }, context) => {
       const user = checkAuth(context);
       const sanitizedName = sanitize(name);

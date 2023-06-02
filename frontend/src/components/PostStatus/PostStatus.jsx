@@ -34,11 +34,17 @@ const PostButtons = ({
     return (
       <div className="ms-2">
         {isPrivate ? (
-          <button className="btn btn-primary" onClick={handleMakePostPublic}>
+          <button
+            className="btn btn-primary btn-sm"
+            onClick={handleMakePostPublic}
+          >
             Gør Offentligt
           </button>
         ) : (
-          <button className="btn btn-danger" onClick={handleMakePostPrivate}>
+          <button
+            className="btn btn-danger btn-sm"
+            onClick={handleMakePostPrivate}
+          >
             Gør Privat
           </button>
         )}

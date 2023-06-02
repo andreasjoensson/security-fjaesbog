@@ -9,6 +9,7 @@ import CreatePost from "../../components/createPost/CreatePost";
 import { Accessibility } from "@material-ui/icons";
 import RemoveCircleOutlineIcon from "@material-ui/icons/RemoveCircleOutline";
 import Post from "../../components/Post/Post";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 export default function Forum() {
   let { id } = useParams();
@@ -76,94 +77,101 @@ export default function Forum() {
     <div className="container-fluid">
       <div className="row">
         <Sidebar currentPage={id} />
-        <div className="communityContainer col-9">
-          <div className="communityCover">
-            <img
-              src={data?.getCommunity.coverpic}
-              className="communityCoverImg"
-            />
-          </div>
-          <div className="communityBar">
-            <div className="communityInfo">
-              <div className="communityProfilePic">
-                <img
-                  src={data?.getCommunity.profilepic}
-                  className="communityProfilePicImg"
-                />
-              </div>
-              <div className="communityJoin">
-                <h2>{data?.getCommunity.name}</h2>
-                {alreadyMember ? (
-                  <button
-                    className="joinCommunity leave"
-                    onClick={() =>
-                      joinCommunity({
-                        variables: {
-                          communityId: data?.getCommunity.id,
-                        },
-                      })
-                    }
-                  >
-                    Forlad
-                  </button>
-                ) : (
-                  <button
-                    className="joinCommunity"
-                    onClick={() =>
-                      joinCommunity({
-                        variables: {
-                          communityId: data?.getCommunity.id,
-                        },
-                      })
-                    }
-                  >
-                    Join
-                  </button>
-                )}
-              </div>
-              <div className="communityMembers">
-                <Accessibility fontSize="large" />
-                <span>{data?.getCommunity.members} medlemmer</span>
-              </div>
-            </div>
-            <div className="communityDescription mt-3">
-              <p>{data?.getCommunity.description}</p>
-            </div>
-          </div>
 
-          <div className="communityFlexContainer">
-            {alreadyMember ? (
-              <>
-                <div className="communityPostContainer">
-                  <CreatePost
-                    personal={false}
-                    community_id={data?.getCommunity.id}
-                    community={id}
-                  />
-                  {data?.getCommunityPosts.map((post) => (
-                    <Post
-                      key={post.post_id}
-                      post_id={post.post_id}
-                      createdAt={post.created_at}
-                      name={post.name}
-                      profilePic={post.profilepic}
-                      title={post.title}
-                      text={post.text}
-                      image={post?.image}
-                    />
-                  ))}
-                </div>
-              </>
-            ) : (
-              <div className="d-flex noaccess mt-5 justify-content-center">
-                <RemoveCircleOutlineIcon fontSize="large" />
-                <h5>
-                  Join den her community, før du kan oprette og se opslag....
-                </h5>
-              </div>
-            )}
+        {loading ? (
+          <div className="communityContainer col-9">
+            <LoadingScreen />
           </div>
-        </div>
+        ) : (
+          <div className="communityContainer col-9">
+            <div className="communityCover">
+              <img
+                src={data?.getCommunity.coverpic}
+                className="communityCoverImg"
+              />
+            </div>
+            <div className="communityBar">
+              <div className="communityInfo">
+                <div className="communityProfilePic">
+                  <img
+                    src={data?.getCommunity.profilepic}
+                    className="communityProfilePicImg"
+                  />
+                </div>
+                <div className="communityJoin">
+                  <h2>{data?.getCommunity.name}</h2>
+                  {alreadyMember ? (
+                    <button
+                      className="btn ms-3 btn-danger btn-sm"
+                      onClick={() =>
+                        joinCommunity({
+                          variables: {
+                            communityId: data?.getCommunity.id,
+                          },
+                        })
+                      }
+                    >
+                      Forlad
+                    </button>
+                  ) : (
+                    <button
+                      className="btn ms-3 btn-primary btn-sm"
+                      onClick={() =>
+                        joinCommunity({
+                          variables: {
+                            communityId: data?.getCommunity.id,
+                          },
+                        })
+                      }
+                    >
+                      Join
+                    </button>
+                  )}
+                </div>
+                <div className="communityMembers">
+                  <Accessibility fontSize="large" />
+                  <span>{data?.getCommunityMembers.length} medlemmer</span>
+                </div>
+              </div>
+              <div className="communityDescription mt-3">
+                <p>{data?.getCommunity.description}</p>
+              </div>
+            </div>
+
+            <div className="communityFlexContainer">
+              {alreadyMember ? (
+                <>
+                  <div className="communityPostContainer">
+                    <CreatePost
+                      personal={false}
+                      community_id={data?.getCommunity.id}
+                      community={id}
+                    />
+                    {data?.getCommunityPosts.map((post) => (
+                      <Post
+                        key={post.post_id}
+                        post_id={post.post_id}
+                        createdAt={post.created_at}
+                        name={post.name}
+                        profilePic={post.profilepic}
+                        title={post.title}
+                        text={post.text}
+                        image={post?.image}
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <div className="d-flex noaccess mt-5 justify-content-center">
+                  <RemoveCircleOutlineIcon fontSize="large" />
+                  <h5>
+                    Join den her community, før du kan oprette og se opslag....
+                  </h5>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

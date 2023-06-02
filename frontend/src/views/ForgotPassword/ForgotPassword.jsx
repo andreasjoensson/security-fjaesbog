@@ -16,7 +16,7 @@ export default function ForgotPassword() {
 
     try {
       const response = await axios.post(
-        "http://localhost:1040/password/forgot",
+        "http://20.228.199.140:1040/password/forgot",
         { email }
       );
       setMessage(response.data.message); // assuming the API returns a message

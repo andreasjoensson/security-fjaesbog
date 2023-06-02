@@ -18,6 +18,7 @@ function Feed() {
         text
         image
         post_id
+        community_id
         title
         user_id
         profilepic
@@ -105,6 +106,7 @@ function Feed() {
                 title={DOMPurify.sanitize(post.title)}
                 user_id={DOMPurify.sanitize(post.user_id)}
                 text={DOMPurify.sanitize(post.text)}
+                community_id={DOMPurify.sanitize(post.community_id)}
                 private_post={DOMPurify.sanitize(post.isprivate)}
                 image={DOMPurify.sanitize(post?.image)}
                 makePostPublic={makePostPublic}

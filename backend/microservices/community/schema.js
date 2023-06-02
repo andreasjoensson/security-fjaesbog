@@ -4,6 +4,7 @@ const typeDefs = gql`
   type Query {
     getCommunity(name: String!): Community
     getCommunitiesByUser: [Community]!
+    getCommunityById(id: ID!): Community
     getAll: ProfileCommunity!
     getCommunityMembers(name: String!): [Member]
   }

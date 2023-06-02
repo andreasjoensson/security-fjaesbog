@@ -126,7 +126,7 @@ export default function Login() {
             {loading ? (
               <button
                 type="submit"
-                className="loginButton d-flex justify-content-center"
+                className="loginButton d-flex justify-content-center align-items-center"
               >
                 Logger ind....{" "}
                 <div

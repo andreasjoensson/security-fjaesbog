@@ -91,7 +91,7 @@ function CreatePost({ personal, community_id, community }) {
 
   return (
     <div className="createPost">
-      <h3>Lav opslag</h3>
+      <h3>Opret et nyt opslag</h3>
       <div className="line"></div>
       <div className="createPostInput">
         <img

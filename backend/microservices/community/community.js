@@ -23,6 +23,19 @@ module.exports = {
         members: getAmountOfMembers.rows[0].count,
       };
     }),
+    getCommunityById: cacheMiddleware(async (_, { id }, context) => {
+      const user = checkAuth(context);
+      const sanitizedId = sanitize(id);
+
+      const getCommunityQuery = await pool.query(
+        "SELECT * FROM community WHERE id = $1",
+        [sanitizedId]
+      );
+
+      return {
+        ...getCommunityQuery.rows[0],
+      };
+    }),
     getCommunitiesByUser: async (_, {}, context) => {
       const user = checkAuth(context);
       const client = await pool.connect();

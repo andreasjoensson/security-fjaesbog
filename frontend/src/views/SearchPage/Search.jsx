@@ -1,10 +1,12 @@
 import "./search.css";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { gql, useQuery } from "@apollo/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import LoadingScreen from "../LoadingScreen/LoadingScreen";
 
 export default function Search() {
   const [keyword, setKeyword] = useState("");
+  const [newData, setNewData] = useState([]);
 
   const getAllQuery = gql`
     query Query {
@@ -22,23 +24,20 @@ export default function Search() {
     }
   `;
 
-  const { data, loading } = useQuery(getAllQuery);
+  const { data, loading, error } = useQuery(getAllQuery);
 
-  if (loading)
-    return (
-      <div class="lds-circle">
-        <div></div>
-      </div>
-    );
-
-  const combinedData = [...data?.getAll?.user, ...data?.getAll?.community];
-
-  const newData = combinedData?.filter((data) => {
-    if (keyword == null) return data;
-    else if (data.name.toLowerCase().includes(keyword.toLowerCase())) {
-      return data;
+  useEffect(() => {
+    if (!loading && data) {
+      const combinedData = [...data.getAll.user, ...data.getAll.community];
+      const filteredData = combinedData.filter((item) =>
+        item.name.toLowerCase().includes(keyword.toLowerCase())
+      );
+      setNewData(filteredData);
     }
-  });
+  }, [data, loading, keyword]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
 
   console.log(newData);
   return (
@@ -57,36 +56,42 @@ export default function Search() {
             />
           </div>
 
-          <div className="search-items col-9">
-            {newData.map((item) =>
-              item.description == null ? (
-                <a className="searchItem" href={`/profile/${item.name}`}>
-                  <img
-                    src={
-                      item.profilepic.length > 0
-                        ? item.profilepic
-                        : "https://www.pudsprodukter.dk/wp-content/uploads/2016/08/facebook-default-no-profile-pic.jpg"
-                    }
-                    className="searchPic"
-                  />
-                  <p>{item.name}</p>
-                </a>
-              ) : (
-                <a className="searchItem" href={`/profile/${item.name}`}>
-                  <img
-                    src={
-                      item.profilepic.length > 0
-                        ? item.profilepic
-                        : "https://www.pudsprodukter.dk/wp-content/uploads/2016/08/facebook-default-no-profile-pic.jpg"
-                    }
-                    className="searchPic"
-                  />
-                  <p>{item.name}</p>
-                  <p>{item.description}</p>
-                </a>
-              )
-            )}
-          </div>
+          {loading ? (
+            <div className="col-9">
+              <LoadingScreen />
+            </div>
+          ) : (
+            <div className="search-items col-9">
+              {newData.map((item) =>
+                item.description == null ? (
+                  <a className="searchItem" href={`/profile/${item.name}`}>
+                    <img
+                      src={
+                        item.profilepic.length > 0
+                          ? item.profilepic
+                          : "https://www.pudsprodukter.dk/wp-content/uploads/2016/08/facebook-default-no-profile-pic.jpg"
+                      }
+                      className="searchPic"
+                    />
+                    <p>{item.name}</p>
+                  </a>
+                ) : (
+                  <a className="searchItem" href={`/profile/${item.name}`}>
+                    <img
+                      src={
+                        item.profilepic.length > 0
+                          ? item.profilepic
+                          : "https://www.pudsprodukter.dk/wp-content/uploads/2016/08/facebook-default-no-profile-pic.jpg"
+                      }
+                      className="searchPic"
+                    />
+                    <p>{item.name}</p>
+                    <p>{item.description}</p>
+                  </a>
+                )
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

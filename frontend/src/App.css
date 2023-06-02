@@ -71,3 +71,7 @@ label,
 small {
   display: block;
 }
+
+.sidebarNav > a {
+  text-decoration: none;
+}

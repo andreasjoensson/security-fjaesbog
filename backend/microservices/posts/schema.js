@@ -27,11 +27,22 @@ const typeDefs = gql`
     created_at: String!
     name: String
     profilepic: String
+    community: Community
     community_id: ID
     image: String
     comments: [Comment]
     likes: [Like]
     isprivate: Boolean!
+  }
+
+  type Community {
+    id: ID!
+    name: String!
+    description: String!
+    profilepic: String!
+    coverpic: String!
+    created_at: String!
+    members: Int!
   }
 
   type Like @key(fields: "id") {
