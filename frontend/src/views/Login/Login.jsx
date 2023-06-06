@@ -1,12 +1,10 @@
-import "./login.css";
-import logo from "../../assets/logo.png";
-import { AccountCircleOutlined, MailOutline } from "@material-ui/icons";
-import { Lock } from "@material-ui/icons";
-import { useState, useContext } from "react";
 import { gql, useMutation } from "@apollo/client";
+import { AccountCircleOutlined, Lock } from "@material-ui/icons";
+import { useContext, useState } from "react";
+import { Link, Redirect } from "react-router-dom";
+import logo from "../../assets/logo.png";
 import { AuthContext } from "../../context/auth";
-import { Link } from "react-router-dom";
-import { Redirect } from "react-router-dom";
+import "./login.css";
 
 const LOGIN_QUERY = gql`
   mutation login($name: String!, $password: String!) {
@@ -83,7 +81,7 @@ export default function Login() {
     <div className="login">
       <div className="login-container">
         <div className="logo">
-          <img src={logo} />
+          <img src={logo} alt="Logo af fjæsbog" />
         </div>
 
         <div className="loginContainer">
@@ -144,6 +142,7 @@ export default function Login() {
                   className="loginButton"
                 >
                   <img
+                    alt="Github logo"
                     src={require("../../assets/github-logo.png")}
                     className="small-logo me-3"
                   />{" "}
@@ -169,6 +168,7 @@ export default function Login() {
       </div>
       <div className="col-6 spline-scene">
         <img
+          alt="Vores tre founders"
           className="spline-image"
           src={require("../../assets/images/mettes.png")}
         />

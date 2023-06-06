@@ -1,12 +1,12 @@
-import { ExitToApp, ExpandMoreOutlined, Search } from "@material-ui/icons";
-import "./feed.css";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import Post from "../Post/Post";
+import { ExitToApp } from "@material-ui/icons";
+import DOMPurify from "dompurify";
 import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { AuthContext } from "../../context/auth";
+import Post from "../Post/Post";
 import CreatePost from "../createPost/CreatePost";
-import DOMPurify from "dompurify";
+import "./feed.css";
 
 function Feed() {
   const { logout, user } = useContext(AuthContext);
@@ -97,7 +97,7 @@ function Feed() {
                 </div>
               </div>
 
-              <a className="logout" onClick={logoutFunc}>
+              <a className="logout" href="#" onClick={logoutFunc}>
                 <ExitToApp />
               </a>
             </div>

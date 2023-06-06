@@ -1,16 +1,12 @@
-import { ArrowDownwardOutlined } from "@material-ui/icons";
-import { ArrowDownward, ArrowUpwardOutlined } from "@material-ui/icons";
-import "./comment.css";
 import { gql, useQuery } from "@apollo/client";
-import { useState, useEffect } from "react";
-import { useContext } from "react";
-import { AuthContext } from "../../context/auth";
-import CommentDislike from "../Reactions/CommentDislike";
-import Like from "../Reactions/Like";
-import CommentLike from "../Reactions/CommentLike";
 import moment from "moment";
 import "moment/locale/da";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/auth";
 import DeleteComment from "../DeleteComment/DeleteComment";
+import CommentDislike from "../Reactions/CommentDislike";
+import CommentLike from "../Reactions/CommentLike";
+import "./comment.css";
 
 export default function Comment({
   id,
@@ -47,11 +43,11 @@ export default function Comment({
 
   useEffect(() => {
     setLiked(
-      data?.getCommentLikes.likes.filter((e) => e.user_id == user.user_id)
+      data?.getCommentLikes.likes.filter((e) => e.user_id === user.user_id)
         .length > 0
     );
     setDisliked(
-      data?.getCommentLikes.dislikes.filter((e) => e.user_id == user.user_id)
+      data?.getCommentLikes.dislikes.filter((e) => e.user_id === user.user_id)
         .length > 0
     );
   }, [data]);
@@ -82,7 +78,7 @@ export default function Comment({
             <p className="commentLikes">{data?.getCommentLikes.likeCount}</p>
           </div>
         </div>
-        {user.name == name ? (
+        {user.name === name ? (
           <DeleteComment comment_id={id} post_id={post_id} />
         ) : (
           <p></p>

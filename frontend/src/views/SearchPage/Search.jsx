@@ -70,6 +70,7 @@ export default function Search() {
                     href={`/profile/${item.name}`}
                   >
                     <img
+                      alt="Profilbillede til søgning"
                       src={
                         item.profilepic.length > 0
                           ? item.profilepic
@@ -82,6 +83,7 @@ export default function Search() {
                 ) : (
                   <a className="searchItem" href={`/profile/${item.name}`}>
                     <img
+                      alt="Profilbillede til søgning"
                       src={
                         item.profilepic.length > 0
                           ? item.profilepic

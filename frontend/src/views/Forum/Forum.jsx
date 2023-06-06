@@ -52,7 +52,7 @@ export default function Forum() {
     }
   `;
 
-  const { data, error, loading } = useQuery(GET_COMMUNITY_QUERY, {
+  const { data, loading } = useQuery(GET_COMMUNITY_QUERY, {
     variables: {
       name: id,
     },
@@ -63,15 +63,14 @@ export default function Forum() {
   });
 
   useEffect(() => {
-    console.log("data", data);
-    console.log("error", error);
-    console.log("loading", loading);
-    setAlreadyMember(
-      data?.getCommunityMembers.filter(
-        (member) => member.users_id == user.user_id
-      ).length > 0
-    );
-  }, [loading, data, error]);
+    if (data) {
+      setAlreadyMember(
+        data?.getCommunityMembers.filter(
+          (member) => member.users_id === user.user_id
+        ).length > 0
+      );
+    }
+  }, [data, user.user_id]);
 
   return (
     <div className="container-fluid">
@@ -86,6 +85,7 @@ export default function Forum() {
           <div className="communityContainer col-9">
             <div className="communityCover">
               <img
+                alt="coverpic"
                 src={data?.getCommunity.coverpic}
                 className="communityCoverImg"
               />
@@ -94,6 +94,7 @@ export default function Forum() {
               <div className="communityInfo">
                 <div className="communityProfilePic">
                   <img
+                    alt="profilepic"
                     src={data?.getCommunity.profilepic}
                     className="communityProfilePicImg"
                   />

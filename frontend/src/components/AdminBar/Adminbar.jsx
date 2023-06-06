@@ -1,28 +1,24 @@
-import "./adminbar.css";
-import logo from "../../assets/logo.png";
 import {
+  AccountCircleOutlined,
   AssessmentRounded,
-  FaceOutlined,
-  ForumOutlined,
-  SchoolOutlined,
-  SearchOutlined,
+  CopyrightOutlined,
 } from "@material-ui/icons";
-import { CopyrightOutlined } from "@material-ui/icons";
 import { Link } from "react-router-dom";
-import { AccountCircleOutlined } from "@material-ui/icons";
+import logo from "../../assets/logo.png";
+import "./adminbar.css";
 
 function Adminbar({ currentPage }) {
   return (
     <div className="sidebar col-3">
       <div className="logo-container">
-        <img src={logo} />
+        <img alt="Fjæsbogo logo" src={logo} />
       </div>
       <nav>
         <ul className="sidebarNav">
           <Link to="/admin">
             <li
               className={`sidebarItem ${
-                currentPage == "dashboard" ? "active" : ""
+                currentPage === "dashboard" ? "active" : ""
               }`}
             >
               <div className="active-line"></div>
@@ -34,7 +30,7 @@ function Adminbar({ currentPage }) {
           <Link to={`/adminusers`}>
             <li
               className={`sidebarItem ${
-                currentPage == "adminusers" ? "active" : ""
+                currentPage === "adminusers" ? "active" : ""
               }`}
             >
               <div className="active-line"></div>

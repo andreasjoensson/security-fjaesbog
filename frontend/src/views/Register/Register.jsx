@@ -149,7 +149,7 @@ const Register = () => {
             style={{ background: "black" }}
           >
             <div className="logo logo-white">
-              <img src={logo} />
+              <img src={logo} alt="Logo af Fjæsbog" />
             </div>
             <RegisterStepper step={step} />
           </div>

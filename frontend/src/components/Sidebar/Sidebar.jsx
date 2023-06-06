@@ -1,18 +1,17 @@
-import "./sidebar.css";
-import logo from "../../assets/logo.png";
+import { gql, useQuery } from "@apollo/client";
 import {
+  AccountCircleOutlined,
   AssessmentRounded,
+  CopyrightOutlined,
   ForumOutlined,
   SearchOutlined,
 } from "@material-ui/icons";
-import { gql, useQuery } from "@apollo/client";
-import { CopyrightOutlined } from "@material-ui/icons";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
-import { AccountCircleOutlined } from "@material-ui/icons";
-import { useContext } from "react";
-import { AuthContext } from "../../context/auth";
 import DOMPurify from "dompurify";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import { AuthContext } from "../../context/auth";
+import "./sidebar.css";
 
 function Sidebar({ currentPage }) {
   const { user } = useContext(AuthContext);
@@ -27,7 +26,7 @@ function Sidebar({ currentPage }) {
     }
   `;
 
-  const { data, loading, error } = useQuery(GET_COMMUNITIES_QUERY);
+  const { data, loading } = useQuery(GET_COMMUNITIES_QUERY);
 
   if (loading)
     return (
@@ -46,7 +45,7 @@ function Sidebar({ currentPage }) {
           <Link to="/dashboard">
             <li
               className={`sidebarItem ${
-                currentPage == "dashboard" ? "active" : ""
+                currentPage === "dashboard" ? "active" : ""
               }`}
             >
               <div className="active-line"></div>
@@ -58,7 +57,7 @@ function Sidebar({ currentPage }) {
           <Link to={`/profile/${user.name}`}>
             <li
               className={`sidebarItem ${
-                currentPage == "profile" ? "active" : ""
+                currentPage === "profile" ? "active" : ""
               }`}
             >
               <div className="active-line"></div>
@@ -70,7 +69,7 @@ function Sidebar({ currentPage }) {
           <Link to="/search">
             <li
               className={`sidebarItem ${
-                currentPage == "search" ? "active" : ""
+                currentPage === "search" ? "active" : ""
               }`}
             >
               <div className="active-line"></div>
@@ -87,7 +86,7 @@ function Sidebar({ currentPage }) {
           <Link to="/opretforum">
             <li
               className={`sidebarItem ${
-                currentPage == "opretforum" ? "active" : ""
+                currentPage === "opretforum" ? "active" : ""
               }`}
             >
               <div className="active-line"></div>
@@ -99,7 +98,7 @@ function Sidebar({ currentPage }) {
             <Link key={i} to={`/forum/${DOMPurify.sanitize(community.name)}`}>
               <li
                 className={`sidebarItem ${
-                  currentPage == DOMPurify.sanitize(community.name)
+                  currentPage === DOMPurify.sanitize(community.name)
                     ? "active"
                     : ""
                 }`}

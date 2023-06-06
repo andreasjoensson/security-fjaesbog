@@ -41,12 +41,12 @@ export default function School({
             });
           }}
           className={`list-group-item p-3 ${
-            i == isSelected ? "activeSchool" : "inactive"
+            i === isSelected ? "activeSchool" : "inactive"
           }`}
         >
           <img
             src={
-              education == "vidergående"
+              education === "vidergående"
                 ? post.Logo
                 : `https://elevpraktik.dk/${post.Logo}`
             }

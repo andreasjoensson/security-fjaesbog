@@ -1,10 +1,7 @@
-import React, { Component } from "react";
-import { Bar, Doughnut } from "react-chartjs-2";
-import { gql } from "@apollo/client";
+import { gql, useQuery } from "@apollo/client";
+import React, { useEffect, useState } from "react";
+import { Doughnut } from "react-chartjs-2";
 import "./admindashboard.scss";
-import { useEffect } from "react";
-import { useQuery } from "@apollo/client";
-import { useState } from "react";
 
 const AdminDashboard = () => {
   // GraphQL query

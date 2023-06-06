@@ -10,7 +10,7 @@ const AdminRoute = ({ children, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) =>
-        user && user.role == "ADMIN" ? (
+        user && user.role === "ADMIN" ? (
           children
         ) : (
           <Redirect

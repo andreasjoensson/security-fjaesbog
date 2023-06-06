@@ -1,19 +1,17 @@
+import { gql, useMutation, useQuery } from "@apollo/client";
 import { CommentOutlined, Send } from "@material-ui/icons";
-import Dislike from "../Reactions/Dislike";
-import Like from "../Reactions/Like";
-import { useEffect } from "react";
-import "./post.css";
-import { gql, useQuery, useMutation } from "@apollo/client";
-import { useContext, useState } from "react";
-import { AuthContext } from "../../context/auth";
-import Comments from "../Comments/Comments";
+import DOMPurify from "dompurify";
 import moment from "moment";
 import "moment/locale/da";
-import { EmojiEmotionsOutlined } from "@material-ui/icons";
+import { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../context/auth";
+import Comments from "../Comments/Comments";
+import CommunityFeat from "../CommunityFeat/CommunityFeat";
 import DeletePost from "../DeletePost/DeletePost";
 import PostButtons from "../PostStatus/PostStatus";
-import DOMPurify from "dompurify";
-import CommunityFeat from "../CommunityFeat/CommunityFeat";
+import Dislike from "../Reactions/Dislike";
+import Like from "../Reactions/Like";
+import "./post.css";
 
 function Post({
   post_id,
@@ -89,10 +87,10 @@ function Post({
 
   useEffect(() => {
     setLiked(
-      data?.getLikes.likes.filter((e) => e.user_id == user.user_id).length > 0
+      data?.getLikes.likes.filter((e) => e.user_id === user.user_id).length > 0
     );
     setDisliked(
-      data?.getLikes.dislikes.filter((e) => e.user_id == user.user_id).length >
+      data?.getLikes.dislikes.filter((e) => e.user_id === user.user_id).length >
         0
     );
   }, [data]);
@@ -107,7 +105,7 @@ function Post({
   return (
     <div className="post">
       <div className="post-top-bar">
-        {community_id == null || parseInt(community_id) <= 0 ? (
+        {!community_id || parseInt(community_id) <= 0 ? (
           "Postet på egen profil"
         ) : (
           <CommunityFeat community_id={community_id} />
@@ -123,7 +121,7 @@ function Post({
           <span>{moment(createdAt).fromNow()}</span>
         </div>
 
-        {user.name == name ? <DeletePost id={post_id} /> : <p></p>}
+        {user.name === name ? <DeletePost id={post_id} /> : <p></p>}
         <PostButtons
           user_id={user.user_id}
           post_id={post_id}
@@ -137,7 +135,11 @@ function Post({
         <h3>{DOMPurify.sanitize(title)}</h3>
         <p>{DOMPurify.sanitize(text)}</p>
         {image !== "" || "" ? (
-          <img src={image} className="postPicture" />
+          <img
+            src={image}
+            alt="Profilbillede til opslaget"
+            className="postPicture"
+          />
         ) : (
           <p></p>
         )}
@@ -159,6 +161,7 @@ function Post({
 
       <div className="postComment">
         <img
+          alt="Profilbillede til kommentar"
           src={
             user.profilepic.length > 0
               ? user.profilepic

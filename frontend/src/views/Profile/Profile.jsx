@@ -1,12 +1,10 @@
-import "./profile.css";
-import { useParams } from "react-router-dom";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import schoolLogo from "../../assets/school.png";
-import { useQuery, gql } from "@apollo/client";
-import Post from "../../components/Post/Post";
-import { useEffect } from "react";
+import { gql, useQuery } from "@apollo/client";
 import CameraAltOutlinedIcon from "@material-ui/icons/CameraAltOutlined";
+import { useParams } from "react-router-dom";
+import Post from "../../components/Post/Post";
+import Sidebar from "../../components/Sidebar/Sidebar";
 import LoadingScreen from "../LoadingScreen/LoadingScreen";
+import "./profile.css";
 
 export default function Profile() {
   let { id } = useParams();
@@ -47,28 +45,19 @@ export default function Profile() {
     }
   `;
 
-  const {
-    data: userPostsData,
-    loading: userPostsLoading,
-    error: userPostsError,
-  } = useQuery(GET_USER_POSTS, {
-    variables: { name: id },
-  });
+  const { data: userPostsData, loading: userPostsLoading } = useQuery(
+    GET_USER_POSTS,
+    {
+      variables: { name: id },
+    }
+  );
 
-  const {
-    data: userProfileData,
-    loading: userProfileLoading,
-    error: userProfileError,
-  } = useQuery(GET_USER_PROFILE, {
-    variables: { name: id },
-  });
-
-  useEffect(() => {
-    console.log("profil", userPostsData);
-    console.log("error", userPostsError);
-    console.log("userProfileData.", userProfileData);
-    console.log("userProfileError", userProfileError);
-  }, [userPostsData, userPostsError]);
+  const { data: userProfileData, loading: userProfileLoading } = useQuery(
+    GET_USER_PROFILE,
+    {
+      variables: { name: id },
+    }
+  );
 
   return (
     <div className="profilePage">
@@ -81,6 +70,7 @@ export default function Profile() {
         <div className="profile-container">
           <div className="profile-cover">
             <img
+              alt="Profil cover"
               src={
                 userProfileData?.getProfile.profilecover
                   ? userProfileData?.getProfile.profilecover
@@ -94,6 +84,7 @@ export default function Profile() {
             <div className="profile-stats">
               <div className="profile-pic">
                 <img
+                  alt="Profil billede"
                   src={
                     userProfileData.getProfile.profilepic
                       ? userProfileData.getProfile.profilepic

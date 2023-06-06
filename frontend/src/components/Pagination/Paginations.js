@@ -1,19 +1,27 @@
-import { ChevronLeft } from '@material-ui/icons'
-import { ChevronRight } from '@material-ui/icons'
-import './pagination.css'
+import { ChevronLeft } from "@material-ui/icons";
+import { ChevronRight } from "@material-ui/icons";
+import "./pagination.css";
 
-const Pagination = ({pageDecrementBtn, renderPageNumbers, pageIncrementBtn, handlePrevbtn, handleNextbtn, currentPage,handleLoadMore,pages}) => {
-  
-
-    return (
-      <>
+const Pagination = ({
+  pageDecrementBtn,
+  renderPageNumbers,
+  pageIncrementBtn,
+  handlePrevbtn,
+  handleNextbtn,
+  currentPage,
+  handleLoadMore,
+  pages,
+}) => {
+  return (
+    <>
       <ul className="pageNumbers">
         <li>
-          <button className="paginationBtn"
+          <button
+            className="paginationBtn"
             onClick={handlePrevbtn}
-            disabled={currentPage == pages[0] ? true : false}
+            disabled={currentPage === pages[0] ? true : false}
           >
-          <ChevronLeft/>
+            <ChevronLeft />
           </button>
         </li>
         {pageDecrementBtn}
@@ -21,16 +29,17 @@ const Pagination = ({pageDecrementBtn, renderPageNumbers, pageIncrementBtn, hand
         {pageIncrementBtn}
 
         <li>
-          <button  className="paginationBtn"
+          <button
+            className="paginationBtn"
             onClick={handleNextbtn}
-            disabled={currentPage == pages[pages.length - 1] ? true : false}
+            disabled={currentPage === pages[pages.length - 1] ? true : false}
           >
-          <ChevronRight/>
+            <ChevronRight />
           </button>
         </li>
       </ul>
     </>
-    );
-  };
-  
-  export default Pagination;
+  );
+};
+
+export default Pagination;

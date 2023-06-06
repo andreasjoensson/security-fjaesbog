@@ -1,13 +1,12 @@
-import "./forgotpassword.css";
-import logo from "../../assets/logo.png";
-import { AccountCircleOutlined, MailOutline } from "@material-ui/icons";
-import { useState } from "react";
+import { AccountCircleOutlined } from "@material-ui/icons";
 import axios from "axios";
+import { useState } from "react";
 import joebiden from "../../assets/jodebiden.png";
+import logo from "../../assets/logo.png";
+import "./forgotpassword.css";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -29,7 +28,7 @@ export default function ForgotPassword() {
     <div className="login">
       <div className="login-container">
         <div className="logo">
-          <img src={logo} />
+          <img src={logo} alt="Fjæsbog logo" />
         </div>
 
         <div className="loginContainer">
@@ -71,7 +70,11 @@ export default function ForgotPassword() {
         </div>
       </div>
       <div className="col-6 spline-scene">
-        <img className="spline-image" src={joebiden} />
+        <img
+          className="spline-image"
+          src={joebiden}
+          alt="Glemt adgangskode Joe Biden"
+        />
       </div>
     </div>
   );

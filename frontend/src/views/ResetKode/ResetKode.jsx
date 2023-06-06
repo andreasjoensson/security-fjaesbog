@@ -1,9 +1,9 @@
-import logo from "../../assets/logo.png";
 import { Lock } from "@material-ui/icons";
-import { useState, useContext } from "react";
-import { useParams } from "react-router-dom";
-import "./ResetKode.css";
 import axios from "axios";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import logo from "../../assets/logo.png";
+import "./ResetKode.css";
 
 export default function ResetKode() {
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,7 +36,7 @@ export default function ResetKode() {
     <div className="login">
       <div className="login-container">
         <div className="logo">
-          <img src={logo} />
+          <img src={logo} alt="Fjæsbog officiele logo" />
         </div>
 
         <div className="loginContainer">
@@ -84,6 +84,7 @@ export default function ResetKode() {
       </div>
       <div className="col-6 spline-scene">
         <img
+          alt="Joe Biden glemt adgangskode"
           className="spline-image"
           src={require("../../assets/jodebiden.png")}
         />

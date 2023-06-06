@@ -1,5 +1,4 @@
 import React from "react";
-import { useMutation, gql } from "@apollo/client";
 const PostButtons = ({
   user_id,
   author_id,
@@ -30,7 +29,7 @@ const PostButtons = ({
     }
   };
 
-  if (parseInt(user_id) == parseInt(author_id)) {
+  if (parseInt(user_id) === parseInt(author_id)) {
     return (
       <div className="ms-2">
         {isPrivate ? (

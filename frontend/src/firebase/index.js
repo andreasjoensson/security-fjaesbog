@@ -21,15 +21,7 @@ const uploadImage = async (image) => {
   const storageRef = ref(storage, `images/${image.name}`);
   const uploadTask = uploadBytesResumable(storageRef, image);
 
-  uploadTask.on(
-    "state_changed",
-    (snapshot) => {
-      const prog = Math.round(
-        (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-      );
-    },
-    (error) => console.log(error)
-  );
+  uploadTask.on("state_changed", (error) => console.log(error));
   await uploadTask; // 👈 uploadTask is a promise itself, so you can await it
 
   let downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
