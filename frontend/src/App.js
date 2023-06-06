@@ -11,15 +11,11 @@ import CreateForum from "./views/CreateForum/CreateForum";
 import Search from "./views/SearchPage/Search";
 import ForgotPassword from "./views/ForgotPassword/ForgotPassword";
 import ResetKode from "./views/ResetKode/ResetKode";
-import { useContext, useEffect } from "react";
 import PrivateRoute from "./components/RouteGuard/PrivateRoute";
-import { AuthContext } from "./context/auth";
 import Admin from "./views/Admin/Admin";
 import AdminUsers from "./views/AdminUsers/AdminUsers";
-import { useState } from "react";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import Callback from "./views/Callback/Callback";
-import Cookies from "universal-cookie";
 
 function App() {
   return (

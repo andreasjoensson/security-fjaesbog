@@ -62,9 +62,13 @@ export default function Search() {
             </div>
           ) : (
             <div className="search-items col-9">
-              {newData.map((item) =>
+              {newData.map((item, i) =>
                 item.description == null ? (
-                  <a className="searchItem" href={`/profile/${item.name}`}>
+                  <a
+                    className="searchItem"
+                    key={i}
+                    href={`/profile/${item.name}`}
+                  >
                     <img
                       src={
                         item.profilepic.length > 0

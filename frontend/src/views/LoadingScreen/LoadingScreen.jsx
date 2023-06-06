@@ -5,7 +5,7 @@ export default function LoadingScreen() {
   return (
     <div className="h-100 w-100 d-flex justify-content-center align-items-center">
       <div className="loadingContainer">
-        <div class="spinner-border large-loading" role="status"></div>
+        <div className="spinner-border large-loading" role="status"></div>
       </div>
     </div>
   );

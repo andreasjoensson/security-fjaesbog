@@ -19,7 +19,6 @@ export default function RegisterStepThree({
 
   const addProfilePic = async (e) => {
     const image = await uploadImage(e.target.files[0]);
-    console.log("image", image);
     changeProfilePic(image);
     setProfilePic(image);
   };
@@ -44,9 +43,13 @@ export default function RegisterStepThree({
 
           <div className="profileContainer">
             <div className="profileCover">
-              <div class="image-upload">
-                <label for="file-input-cover" className="w-100">
-                  <img src={coverPic} className="profileCoverPic" />
+              <div className="image-upload">
+                <label htmlFor="file-input-cover" className="w-100">
+                  <img
+                    alt="Coverbillede til nyt forum"
+                    src={coverPic}
+                    className="profileCoverPic"
+                  />
                 </label>
                 <input
                   id="file-input-cover"
@@ -56,9 +59,13 @@ export default function RegisterStepThree({
                 />
               </div>
               <div className="profilePicture">
-                <div class="image-upload">
-                  <label for="file-input">
-                    <img src={profilePic} className="profilePicturePic" />
+                <div className="image-upload">
+                  <label htmlFor="file-input">
+                    <img
+                      alt="Profilbillede til nyt forum"
+                      src={profilePic}
+                      className="profilePicturePic"
+                    />
                   </label>
                   <input
                     id="file-input"

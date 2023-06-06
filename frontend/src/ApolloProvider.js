@@ -1,6 +1,5 @@
 import App from "./App";
 import React from "react";
-import Cookies from "universal-cookie";
 
 import {
   ApolloClient,

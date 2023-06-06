@@ -121,8 +121,8 @@ function CreatePost({ personal, community_id, community }) {
             />
             <Send className="sendIcon" onClick={submitPost} />
 
-            <div class="image-upload">
-              <label for="file-input-cover">
+            <div className="image-upload">
+              <label htmlFor="file-input-cover">
                 <Image className="imageIcon" />
               </label>
               <input

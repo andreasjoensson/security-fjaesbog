@@ -2,7 +2,7 @@ import { ExitToApp, ExpandMoreOutlined, Search } from "@material-ui/icons";
 import "./feed.css";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import Post from "../Post/Post";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { AuthContext } from "../../context/auth";
 import CreatePost from "../createPost/CreatePost";
@@ -10,6 +10,7 @@ import DOMPurify from "dompurify";
 
 function Feed() {
   const { logout, user } = useContext(AuthContext);
+  const [posts, setPosts] = useState([]);
   const history = useHistory();
 
   const FETCH_POSTS = gql`
@@ -60,10 +61,19 @@ function Feed() {
 
   const { data, loading } = useQuery(FETCH_POSTS);
 
+  useEffect(() => {
+    // Reverse the order of the list
+    if (data) {
+      console.log(data.getPosts);
+      const reversedPosts = [...data?.getPosts].reverse();
+      setPosts(reversedPosts);
+    }
+  }, [data]);
+
   return (
     <>
       {loading ? (
-        <div class="lds-circle">
+        <div className="lds-circle">
           <div></div>
         </div>
       ) : (
@@ -95,8 +105,7 @@ function Feed() {
 
           <div className="postContainer">
             <CreatePost personal={true} />
-
-            {data?.getPosts.map((post) => (
+            {posts.map((post) => (
               <Post
                 key={DOMPurify.sanitize(post.post_id)}
                 post_id={DOMPurify.sanitize(post.post_id)}

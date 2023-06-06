@@ -29,15 +29,9 @@ function Sidebar({ currentPage }) {
 
   const { data, loading, error } = useQuery(GET_COMMUNITIES_QUERY);
 
-  useEffect(() => {
-    console.log("Loading:", loading);
-    console.log("Data:", data);
-    console.log("Error:", error);
-  }, [loading, data, error]);
-
   if (loading)
     return (
-      <div class="lds-circle">
+      <div className="lds-circle">
         <div></div>
       </div>
     );
@@ -101,8 +95,8 @@ function Sidebar({ currentPage }) {
               <p>Opret forum</p>
             </li>
           </Link>
-          {data?.getCommunitiesByUser.map((community) => (
-            <Link to={`/forum/${DOMPurify.sanitize(community.name)}`}>
+          {data?.getCommunitiesByUser.map((community, i) => (
+            <Link key={i} to={`/forum/${DOMPurify.sanitize(community.name)}`}>
               <li
                 className={`sidebarItem ${
                   currentPage == DOMPurify.sanitize(community.name)

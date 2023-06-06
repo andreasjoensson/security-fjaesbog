@@ -71,12 +71,12 @@ export default function ResetKode() {
           </form>
 
           {message && (
-            <div class="alert alert-primary" role="alert">
+            <div className="alert alert-primary" role="alert">
               {message}
             </div>
           )}
           {error && (
-            <div class="alert alert-danger" role="alert">
+            <div className="alert alert-danger" role="alert">
               {error}
             </div>
           )}

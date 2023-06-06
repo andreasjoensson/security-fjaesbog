@@ -55,9 +55,13 @@ export default function CreateForum() {
       <div className="row">
         <Sidebar currentPage={"opretforum"} />
         <div className="col-9">
-          <div class="image-upload">
-            <label for="file-input-cover" className="w-100">
-              <img src={coverPic} className="profileCoverPic" />
+          <div className="image-upload">
+            <label htmlFor="file-input-cover" className="w-100">
+              <img
+                alt="Nyt coverbillede til oprettelse af forum"
+                src={coverPic}
+                className="profileCoverPic"
+              />
             </label>
             <input
               id="file-input-cover"
@@ -66,9 +70,13 @@ export default function CreateForum() {
                 await setCoverPic(await uploadImage(e.target.files[0]))
               }
             />
-            <div class="image-upload">
-              <label for="file-input">
-                <img src={profilePic} className="profilePicturePic" />
+            <div className="image-upload">
+              <label htmlFor="file-input">
+                <img
+                  alt="Nyt profilbillede til oprettelse af forum"
+                  src={profilePic}
+                  className="profilePicturePic"
+                />
               </label>
               <input
                 id="file-input"
@@ -82,20 +90,22 @@ export default function CreateForum() {
 
           <div className="createForum mt-5">
             <form>
-              <div class="form-group">
-                <label for="exampleInputEmail1">Navn til forum</label>
+              <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Navn til forum</label>
                 <input
                   type="text"
                   placeholder="r/"
                   className="form-control"
                   onChange={(e) => setName(e.target.value)}
                 />
-                <small id="emailHelp" class="form-text text-muted">
+                <small id="emailHelp" className="form-text text-muted">
                   Indtast et navn til dit forum, kan ikke fortrydes.
                 </small>
               </div>
-              <div class="form-group">
-                <label for="exampleInputPassword1">Beskrivelse af forum</label>
+              <div className="form-group">
+                <label htmlFor="exampleInputPassword1">
+                  Beskrivelse af forum
+                </label>
                 <input
                   type="text"
                   className="form-control"

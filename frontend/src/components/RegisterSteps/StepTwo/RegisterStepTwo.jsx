@@ -7,7 +7,6 @@ import Pagination from "../../.././components/Pagination/Paginations";
 import School from "../../.././components/Schools/School";
 import { Book, ChildCareOutlined } from "@material-ui/icons";
 import { DirectionsBikeOutlined } from "@material-ui/icons";
-import validator from "validator";
 
 export default function RegisterStepTwo({
   nextStep,

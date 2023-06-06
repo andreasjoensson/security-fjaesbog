@@ -13,7 +13,7 @@ export default function School({
 
   if (loading) {
     return (
-      <div class="lds-circle">
+      <div className="lds-circle">
         <div></div>
       </div>
     );

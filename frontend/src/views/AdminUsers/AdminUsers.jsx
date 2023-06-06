@@ -126,7 +126,7 @@ export default function AdminUsers() {
                                 onClick={() =>
                                   handleUnban(parseInt(user.user_id))
                                 }
-                                class="btn btn-primary"
+                                className="btn btn-primary"
                               >
                                 Unban
                               </button>
@@ -134,7 +134,7 @@ export default function AdminUsers() {
                               <button
                                 type="button"
                                 onClick={() => handleBan(user.user_id)}
-                                class="btn btn-danger"
+                                className="btn btn-danger"
                               >
                                 Ban
                               </button>

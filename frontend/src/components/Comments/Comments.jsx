@@ -22,7 +22,7 @@ export default function Comments({ post_id }) {
 
   if (loading)
     return (
-      <div class="lds-circle">
+      <div className="lds-circle">
         <div></div>
       </div>
     );

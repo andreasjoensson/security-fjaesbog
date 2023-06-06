@@ -130,7 +130,7 @@ export default function Login() {
               >
                 Logger ind....{" "}
                 <div
-                  class="spinner-grow spinner-grow-sm ms-3"
+                  className="spinner-grow spinner-grow-sm ms-3"
                   role="status"
                 ></div>
               </button>

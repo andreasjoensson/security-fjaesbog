@@ -134,7 +134,7 @@ export default function RegisterStepFive({
                 >
                   Opretter....{" "}
                   <div
-                    class="spinner-grow spinner-grow-sm ms-3"
+                    className="spinner-grow spinner-grow-sm ms-3"
                     role="status"
                   ></div>
                 </button>
