@@ -6,7 +6,7 @@ const sanitize = require("xss");
 
 module.exports = {
   Query: {
-    getCommunity: cacheMiddleware(async (_, { name }, context) => {
+    getCommunity: async (_, { name }, context) => {
       const user = checkAuth(context);
       const sanitizedName = sanitize(name);
       const getCommunityQuery = await pool.query(
@@ -22,8 +22,8 @@ module.exports = {
         ...getCommunityQuery.rows[0],
         members: getAmountOfMembers.rows[0].count,
       };
-    }),
-    getCommunityById: cacheMiddleware(async (_, { id }, context) => {
+    },
+    getCommunityById: async (_, { id }, context) => {
       const user = checkAuth(context);
       const sanitizedId = sanitize(id);
 
@@ -35,7 +35,7 @@ module.exports = {
       return {
         ...getCommunityQuery.rows[0],
       };
-    }),
+    },
     getCommunitiesByUser: async (_, {}, context) => {
       const user = checkAuth(context);
       const client = await pool.connect();
@@ -76,6 +76,8 @@ module.exports = {
         "SELECT users_id FROM members WHERE community_id = $1",
         [getCommunityID.rows[0].id]
       );
+
+      console.log("lets gooo", members);
       return members.rows;
     },
     getAll: cacheMiddleware(async (_, {}, context) => {
@@ -135,10 +137,14 @@ module.exports = {
         return removeMember.rows[0];
       }
 
+      console.log("bruger bliver tilføjet her", user);
+
       const addMember = await pool.query(
         "INSERT INTO members(community_id, users_id) VALUES($1,$2) RETURNING *",
         [sanitizedCommunityID, user.user_id]
       );
+
+      console.log("addMember status", addMember);
 
       return addMember.rows[0];
     },
