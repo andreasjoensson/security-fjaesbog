@@ -80,7 +80,7 @@ module.exports = {
       console.log("lets gooo", members);
       return members.rows;
     },
-    getAll: cacheMiddleware(async (_, {}, context) => {
+    getAll: async (_, {}, context) => {
       const user = checkAuth(context);
       const users = await getUsers();
       const forums = await pool.query("SELECT * FROM community");
@@ -91,7 +91,7 @@ module.exports = {
         user: users,
         community: forums.rows,
       };
-    }),
+    },
   },
   Mutation: {
     async createCommunity(

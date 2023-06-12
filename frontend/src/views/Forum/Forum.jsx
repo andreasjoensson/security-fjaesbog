@@ -148,7 +148,7 @@ export default function Forum() {
                       community_id={data?.getCommunity.id}
                       community={id}
                     />
-                    {data?.getCommunityPosts.map((post) => (
+                    {[...data?.getCommunityPosts].reverse().map((post) => (
                       <Post
                         key={post.post_id}
                         post_id={post.post_id}

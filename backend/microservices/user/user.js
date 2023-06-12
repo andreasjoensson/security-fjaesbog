@@ -270,11 +270,7 @@ module.exports = {
           { errors }
         );
       }
-
-      if (password !== confirmPassword) {
-        throw new UserInputError("Adgangskoderne er ikke ens...", { errors });
-      }
-
+      /*
       if (isEmailTaken(sanitize(email))) {
         throw new UserInputError(
           "Emailen bliver allerede brugt af en anden bruger...",
@@ -288,7 +284,7 @@ module.exports = {
           { errors }
         );
       }
-
+*/
       const schoolInsert = await pool.query(
         "INSERT INTO school(name,logo) VALUES($1,$2) RETURNING id",
         [school.Navn, school.Logo]
@@ -315,7 +311,7 @@ module.exports = {
         ]
       );
 
-      newUserCreatedMessage();
+      newUserCreatedMessage(res.rows[0].id);
 
       const token = createToken(res.rows[0]);
       return {

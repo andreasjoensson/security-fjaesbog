@@ -90,7 +90,7 @@ const listenForUserListRequest = () => {
   });
 };
 
-const newUserCreatedMessage = () => {
+const newUserCreatedMessage = (user_id) => {
   amqp.connect(process.env.AMQP_URL, (err, conn) => {
     if (err) {
       console.error(err);
@@ -106,7 +106,7 @@ const newUserCreatedMessage = () => {
       const exchange = "user.events";
       const msg = JSON.stringify({
         type: "USER_CREATED",
-        payload: { id: res.rows[0].id }, // Replace with actual user ID
+        payload: { id: user_id }, // Replace with actual user ID
       });
 
       ch.assertExchange(exchange, "fanout", { durable: false });
